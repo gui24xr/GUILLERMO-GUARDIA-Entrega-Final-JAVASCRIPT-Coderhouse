@@ -1,0 +1,6 @@
+# ignore ALL files in ANY directory named temp
+node_modules
+*.json
+.style.scss
+style.css
+scss
