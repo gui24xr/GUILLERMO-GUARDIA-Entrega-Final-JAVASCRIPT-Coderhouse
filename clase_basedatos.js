@@ -387,4 +387,34 @@ getInfoUserID = (idBuscado) => {
     else return false
 }
 
+
+setLikes(postID,usuarioLikeador){
+
+let infoUserLikeador = this.getUserInfo(usuarioLikeador)
+const {userID} = infoUserLikeador
+//Agrego el userID a la lista de likes del post que me pasan por parametro.
+let posicionEnArrayPostID;
+
+let postEncontrado = false; 
+let i=0;
+
+    while (!postEncontrado && i<this.posts.length){ 
+                  if(this.posts[i].postID == postID){
+                    postEncontrado=true;
+                    
+                    break;
+                  }
+                  else i++;
+            
+                  }
+    if (postEncontrado == true) posicionEnArrayPostID = i;
+    //console.log(this.posts[i].likes)
+    //Ya estoy posicionado sobre el objeto post que yo debo agregar el id del usuario que dio like.
+    console.log(this.posts[i].likes.indexOf(userID))
+    if (this.posts[i].likes.indexOf(userID) < 0) this.posts[i].likes.push(userID)
+    //else console.log("Ya esta")
+    //console.log(this.posts[i].likes)
+
+
+}
 }

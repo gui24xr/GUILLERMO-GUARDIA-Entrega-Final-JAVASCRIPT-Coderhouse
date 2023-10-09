@@ -26,7 +26,7 @@ const elementosBannerSolapas = [
     tag: "h1",
     id: "id-banner-solapas-boton",
     listaClases: ["banner-solapas-text"],
-    listaAcciones: undefined,
+    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarScreenUsuarioLogueado()}}],
     innerText: "MI MOTOGRAM",
   },
 
@@ -34,15 +34,22 @@ const elementosBannerSolapas = [
     tag: "h1",
     id: "id-banner-solapas-boton",
     listaClases: ["banner-solapas-text"],
-    listaAcciones: undefined,
+    listaAcciones: [{evento:'click',accion: ()=> desrenderizarScreenActual()}] ,
     innerText: "NUEVO POST",
   },
   {
     tag: "h1",
     id: "id-banner-solapas-boton",
     listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=> renderizarSolapaOtrosMoteros()}],
-    innerText: "OTROS",
+    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarSolapaOtrosMoteros()}}],
+    innerText: "OTROS MOTEROS",
+  },
+  {
+    tag: "h1",
+    id: "id-banner-solapas-boton",
+    listaClases: ["banner-solapas-text"],
+    listaAcciones: [{evento:'click',accion: ()=> {desrenderizarScreenActual(),renderizarGaleria()}}],
+    innerText: "GALERIA",
   },
 
 ]
@@ -96,11 +103,13 @@ const elementosLoginForm = [
     id: "register-form-nuevo",
     listaClases: ["login-form-text"],
     listaAcciones: [{evento:'mousemove',accion:()=>document.getElementById('register-form-nuevo').classList.toggle('login-form-text-grande')},
-    {evento:'click',accion:()=>irARegistrar()},
+    {evento:'click',accion:()=>{desrenderizarScreenActual(),renderizarScreenRegistro()}},
 
                       ],
     innerText: "Registro",
   },
+
+  
 
   
 ];
@@ -207,6 +216,17 @@ const elementosRegisterForm = [
     listaAcciones: undefined,
     type: "submit",
     value: "Aceptar",
+  },
+
+  {
+    tag: "h1",
+    id: "register-form-atras",
+    listaClases: ["login-form-text"],
+    listaAcciones: [{evento:'mousemove',accion:()=>document.getElementById('register-form-nuevo').classList.toggle('login-form-text-grande')},
+    {evento:'click',accion:()=>{desrenderizarScreenActual(),renderizarLoginScreen()}},
+
+                      ],
+    innerText: "Atras",
   },
 
  

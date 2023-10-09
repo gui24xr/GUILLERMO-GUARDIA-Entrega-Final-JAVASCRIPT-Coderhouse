@@ -13,7 +13,7 @@ class postViewer {
     this.container.className = this.wrapperClass
     this.containerPostInfo = [] //En este container muestro los datos del post.
 
-
+    this.postIDActual = undefined;
     //this.containerPostInfo.setBackground(fotoPost)
     this.procesarObjetosIngresados()
     
@@ -25,57 +25,72 @@ class postViewer {
 
     
 
-    const {fecha: fechaPost, hora: horaPost, texto: textoPost,foto: fotoPost,likes: likesPost} = this.wrapperData;
+    const {postID,fecha: fechaPost, hora: horaPost, texto: textoPost,foto: fotoPost,likes: likesPost} = this.wrapperData;
     //console.log( "Deconstructur", fechaPost, horaPost, textoPost, fotoPost,likesPost);
     
    
     //AL contenedor padre le pongo de fondo la imagen del post.
-    this.container.style.backgroundImage = 'url(' + fotoPost + ')'
+    this.container.style.backgroundImage = 'url(' + fotoPost + ')' 
+
+    this.container.style.backgroundSize = '90% 90%'
+    this.container.style.backgroundRepeat ='no-repeat'
+    this.container.style.backgroundPosition = 'center'
     
-   
+    this.postIDActual = postID;
     //preparo los objetos que voy a renderizar dentro del contenedor que contiene lo que quiero mostrar del post.
     let objetosRenderizar = [
-    /*  {
-        tag: "img",
-        id: "postviewer-foto",
-        listaClases: ["login-form-pic"],
-        listaAcciones: undefined,
-        source: fotoPost,
-      },*/
+    
       {
-        tag: "h1",
-        id: "postviewer-fechahora",
-        listaClases: ["post-fecha-hora"],
+        tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+        id: "cantidad-likes-comentarios",
+        listaClases: ["div-like-comentarios"],
         listaAcciones: undefined,
-        innerText: fechaPost + " " + horaPost,
+        //innerText: likesPost.length + ' Me gusta'
+        hijos:[ 
+        {
+          tag: "h1",
+          id: "postviewer-cantidad-likes",
+          listaClases: ["postviewer-likes-texto"],
+          listaAcciones: undefined,
+          innerText: likesPost.length + ' Me gusta'
+        },
+        {
+          tag: "img",
+          id: "postviewer-ico-like",
+          listaClases: ["iconos-post-viewer"],
+          listaAcciones: [{evento:'click',accion: ()=> darLike(this.postIDActual)}],
+          source: "./imagenes/icons/ico_like.png",
+        },
+        {
+          tag: "img",
+          id: "postviewer-ico-comment",
+          listaClases: ["iconos-post-viewer"],
+          listaAcciones: undefined,
+          source: "./imagenes/icons/ico_comment.png",
+        },]
       },
       {
-        tag: "p",
-        id: "postviewer-texto",
-        listaClases: ["login-form-text"],
+        tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+        id: "div-texto-fecha",
+        listaClases: ["div-texto-comentarios"],
         listaAcciones: undefined,
-        innerText: textoPost,
-      },
-      {
-        tag: "img",
-        id: "postviewer-ico-like",
-        listaClases: ["login-form-pic"],
-        listaAcciones: undefined,
-        source: "./imagenes/icons/ico_like.png",
-      },
-      {
-        tag: "h1",
-        id: "postviewer-cantidad-likes",
-        listaClases: ["post-fecha-hora"],
-        listaAcciones: undefined,
-        innerText: likesPost.length + ' Me gusta'
-      },
-      {
-        tag: "img",
-        id: "postviewer-ico-comment",
-        listaClases: ["login-form-pic"],
-        listaAcciones: undefined,
-        source: "./imagenes/icons/ico_comment.png",
+        //innerText: likesPost.length + ' Me gusta'
+        hijos:[ 
+          {
+            tag: "p",
+            id: "postviewer-texto",
+            listaClases: ["postviewer-texto"],
+            listaAcciones: undefined,
+            innerText: textoPost,
+          },
+          {
+            tag: "h1",
+            id: "postviewer-fechahora",
+            listaClases: ["postviewer-hora"],
+            listaAcciones: undefined,
+            innerText: fechaPost + " " + horaPost,
+          },
+          ]
       },
     ];
 
@@ -113,9 +128,9 @@ class postViewer {
 
 
   cambiarPost = (nuevaData) => {
-    const {  fecha: fechaPost, hora: horaPost, texto: textoPost,  foto: fotoPost, likes: likesPost} = nuevaData;
-    console.log( "Nueva Data", fechaPost, horaPost, textoPost, fotoPost,  likesPost );
-
+    const {  postID, fecha: fechaPost, hora: horaPost, texto: textoPost,  foto: fotoPost, likes: likesPost} = nuevaData;
+    //console.log( "Nueva Data", fechaPost, horaPost, textoPost, fotoPost,  likesPost );
+    this.postIDActual = postID;
     document.getElementById('postviewer-fechahora').innerText = fechaPost + " " + horaPost
    
     this.container.style.backgroundImage = 'url(' + fotoPost + ')'
