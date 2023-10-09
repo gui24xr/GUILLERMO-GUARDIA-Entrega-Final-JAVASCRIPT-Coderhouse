@@ -1,7 +1,16 @@
 class wrapperElements {
-  constructor(wrapperId, wrapperClass, wrapperData,renderFunction) {
+  constructor(wrapperId, wrapperClass, wrapperData,renderFunction,formAction) {
     //this.nodoPadre = nodoPadre;
-    this.container = document.createElement("div");
+    console.log(arguments.length)
+    // 4 Argumentos es xq simplemente sera un div
+    //5 Argumentos es xq sera un form y en el 5to parametro viene un string con el formAction
+    if (arguments.length == 4) this.container = document.createElement("div");
+    else if (arguments.length == 5){
+      this.container = document.createElement("form");
+      this.container.action = formAction;
+
+    }
+
     this.container.id = wrapperId; //La utilizo para manejarme
     this.container.className = wrapperClass;
     this.data = wrapperData;
@@ -10,7 +19,7 @@ class wrapperElements {
     this.referenciaNodo = undefined;
 
     this.procesarObjetosIngresados()
-
+  
   }
 
   

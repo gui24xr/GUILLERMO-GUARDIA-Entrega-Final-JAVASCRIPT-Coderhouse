@@ -17,6 +17,20 @@ const elementosHeaderBanner = [
     listaAcciones: undefined,
     source: "./imagenes/icons/ico_logomoto.png",
   },
+  {
+    tag: "img",
+    id: "header-banner-logo",
+    listaClases: ["headerbar-logo"],
+    listaAcciones: undefined,
+    source: "./imagenes/icons/ico_logomoto2.png",
+  },
+  {
+    tag: "img",
+    id: "header-banner-logo",
+    listaClases: ["headerbar-logo"],
+    listaAcciones: undefined,
+    source: "./imagenes/icons/ico_logomoto3.png",
+  },
 ];
 
 const elementosBannerSolapas = [

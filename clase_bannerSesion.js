@@ -1,10 +1,20 @@
 class bannerSesion extends wrapperElements {
   constructor(wrapperId, wrapperClass, wrapperData, renderFunction) {
     super(wrapperId, wrapperClass, wrapperData, renderFunction);
-
+   
+    
     this.accionBotonConfiguracion = () => alert("Configuracion")
     this.accionBotonLogout = () => cerrarSesion()
  
+  }
+
+  procesarObjetosIngresados(){ //Sobre escribo el metodo
+
+    this.loginbar = new wrapperElements('id-banner-sesion','banner-sesion-login-bar',elementosBannerSesion,transformarObjetoEnNodo)
+    this.loginbar.engancharAlNodoPadre(this.container)
+    this.solapas = undefined
+
+
   }
 
   iniciarSesion(usuario,perfilPic){
@@ -17,12 +27,20 @@ class bannerSesion extends wrapperElements {
     this.iconoLogout = document.getElementById('banner-sesion-icono-logout')
 
     this.UserName.innerText = usuario
+    this.UserName.className = 'banner-sesion-user-name'
     this.perfilPic.src = perfilPic
     this.iconoConfiguracion.className = 'banner-sesion-iconos-encendidos'
     this.iconoConfiguracion.addEventListener('click' ,this.accionBotonConfiguracion)
     this.iconoLogout.className = 'banner-sesion-iconos-encendidos'
     this.iconoLogout.addEventListener('click' ,this.accionBotonLogout)
+   
 
+    this.solapas = new wrapperElements('id-banner-solapas','banner-sesion-solapas-bar',elementosBannerSolapas,transformarObjetoEnNodo)
+   
+    this.solapas.engancharAlNodoPadre(this.container)
+    this.loginbar.engancharAlNodoPadre(this.container)
+
+  
   }
 
   cerrarSesion(){
@@ -34,6 +52,7 @@ class bannerSesion extends wrapperElements {
     this.iconoConfiguracion.removeEventListener('click' ,this.accionBotonConfiguracion)
     this.iconoLogout.className = 'banner-sesion-iconos-apagados'
     this.iconoLogout.removeEventListener('click' ,this.accionBotonLogout)
+    
 
 
   }
@@ -51,12 +70,16 @@ class bannerSesion extends wrapperElements {
 
 const elementosBannerSesion = [
   //Es el menu de la barra principal.
+  
   {
+
+    
+    
     
     tag: "h1",
     id: "banner-sesion-user-name",
-    listaClases: ["menu-sesion-username"],
-    listaAcciones: undefined,//() => alert("imagen2"),
+    listaClases: ['banner-sesion-user-name'],
+    listaAcciones: [{evento:'click', accion: ()=> mainFormLogin.engancharEnNodo(mainContainer)}],//() => alert("imagen2"),
     innerText: 'INICIAR SESION'
   },
   {

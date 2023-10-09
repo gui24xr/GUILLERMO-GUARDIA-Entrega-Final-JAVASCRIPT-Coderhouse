@@ -151,15 +151,15 @@ function abrirSesionUsuario(usuario){
   //Doy la bienvenida y quita de la visualizacion los componentes de form
   alert('Se logueo el usuario: ' + usuario)  //Usar sweet alert.
   mainFormLogin.desengancharDeDom()
-  mainContainer.className = 'class-main-container-sesion-iniciada'
+  //mainContainer.className = 'class-main-container-sesion-iniciada'
   //Inicio sesion en la barra superior pero antes pido a la base de datos los datos del usuario logueado.
   //Sabemos que nos devuelve un objeto. Lo deconstructuro.
   
   let { userName:nombreUsuario, fotoPerfil} = baseDatosApp.getUserInfo(usuarioLogueado)
   //Abro los banners de sesion iniciada.
   bannerSesionActual.iniciarSesion(nombreUsuario,fotoPerfil)
-  bannerSolapas = new wrapperElements('id-banner-solapas','banner-solapas',elementosBannerSolapas,transformarObjetoEnNodo)
-  bannerSolapas.engancharEnNodo(headerContainer)
+  //bannerSolapas = new wrapperElements('id-banner-solapas','banner-solapas',elementosBannerSolapas,transformarObjetoEnNodo)
+  //bannerSolapas.engancharEnNodo(headerContainer)
   //Renderizo los container que muestran las cosas del usuario.
   renderizarScreenUsuarioLogueado()
   
@@ -171,11 +171,11 @@ function abrirSesionUsuario(usuario){
 function cerrarSesion (){
 
    //Vuelve todo estado inicial.
-  mainContainer.className = 'class-main-container'
+  //mainContainer.className = 'class-main-container'
   bannerSesionActual.cerrarSesion()
   desrenderizarScreenActual()
-  renderizarLoginScreen()
-  bannerSolapas.desengancharDeDom()
+  //renderizarLoginScreen()
+  //bannerSolapas.desengancharDeDom()
 
 }
 
@@ -209,7 +209,7 @@ function renderizarSolapaOtrosMoteros(){
   //Antes le pido a la BD un post al azar para dibujar primero
   let  postIngresado = baseDatosApp.getPostID('1') 
   let todosLosPosts = baseDatosApp.getAllPosts()
-  postViewerGeneral = new postViewer('id-post-viewer-general','carrousel',postIngresado,transformarObjetoEnNodo)
+  postViewerGeneral = new postViewer('id-post-viewer-general','post-viewer-container',postIngresado,transformarObjetoEnNodo)
   selectorViewerGeneral = new selectorPosts('id-selector-Posts-general','selector-posts-container',todosLosPosts,postViewerGeneral,transformarObjetoEnNodo)
 
   selectorViewerGeneral.engancharEnNodo(mainContainer)
@@ -250,17 +250,26 @@ function renderizarGaleria(){
             //console.log(data.results[3].urls)
       
             //tomo cada url para constuir un pbjeto y meterlo al array que le voy a dar a renderizar a mi wrapper container.
-            resultados.forEach(    x => {console.log (x.urls.small)
-                                    nuevoObjeto = { tag: "img",
-                                                      id: 'imggaleria',
-                                                   listaClases: ["grid-post-select-pic"],
-                                                    listaAcciones: undefined,
-                                              source: x.urls.small
-                                               }
-
-                                      arrayElementos.push(nuevoObjeto)
+            resultados.forEach(    x => //console.log (x.urls.small)
+                                    
               
-              }
+              {
+                nuevoObjeto = {tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+                              id: "container-galeria-pic",
+                              listaClases: ["div-like-comentarios"],
+                              listaAcciones: undefined,
+                
+                              hijos:[ 
+                                  { tag: "img",
+                                    id: 'imggaleria',
+                                    listaClases: ["grid-post-select-pic"],
+                                    listaAcciones: undefined,
+                                    source: x.urls.small
+                                  }]
+                }
+
+                arrayElementos.push(nuevoObjeto)
+            }
 
 
 
@@ -305,10 +314,10 @@ idNodosParaBorrar.forEach( id => document.getElementById(id).remove())
 function renderizarSelectorFotoPerfil(){
 
   //Muestra una galeria de fotos bajadas de unplash. Recorro el json de unplash.
-  const url = "https://api.unsplash.com/search/photos?query=helmet&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
+  //const url = "https://api.unsplash.com/search/photos?query=helmet&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
   
   //const imageDiv = document.querySelector('.image');
-    fetch(url)
+    fetch(urlPicsHelmet)
         .then(response =>  response.json())
         .then(data => {
 
@@ -316,13 +325,13 @@ function renderizarSelectorFotoPerfil(){
             let nuevoObjeto;
             console.log(/*data.results[3].urls.regular)*/data.results)
             let resultados = data.results
-            console.log("fdfxhcg", resultados)
+            //console.log("fdfxhcg", resultados)
       
             //tomo cada url para constuir un pbjeto y meterlo al array que le voy a dar a renderizar a mi wrapper container.
             resultados.forEach(    x => {console.log (x.urls.small)
                                     nuevoObjeto = { tag: "img",
                                                       id: 'imggaleria',
-                                                   listaClases: ["grid-post"],
+                                                   listaClases: ['selector-picperfil-container-pics'],
                                                     listaAcciones: [{evento:'click',accion:()=>{
                                                       //console.log(x.urls.thumb)
                                                      document.getElementById('register-form-fotoperfil-input').value = x.urls.thumb
@@ -338,7 +347,7 @@ function renderizarSelectorFotoPerfil(){
 
 
         )
-        containerGaleriaFotos  = new wrapperElements('id-wrapper-perfilpic-selector','grid-selector-perfilpic-container',arrayElementos,transformarObjetoEnNodo)
+        containerGaleriaFotos  = new wrapperElements('id-wrapper-perfilpic-selector','selector-picperfil-container',arrayElementos,transformarObjetoEnNodo)
         //Ejecutar quitar elementos de otras pantallas
 
        // postUserViewer.desengancharDeDom()
@@ -353,5 +362,14 @@ function renderizarSelectorFotoPerfil(){
         
         )
 
+
+}
+
+
+
+function renderizarLoginScreen(){
+
+  mainFormLogin =new wrapperElements('id-main-login-form','login-form',elementosLoginForm,transformarObjetoEnNodo,"javascript:conectarBaseDatos()")
+ mainFormLogin.engancharEnNodo(mainContainer)
 
 }

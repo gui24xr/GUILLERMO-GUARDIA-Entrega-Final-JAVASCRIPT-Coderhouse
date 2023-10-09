@@ -26,16 +26,22 @@ class selectorPosts  {
   procesarObjetosIngresados(){
 
     //Recorro los posteos recibidos, armo objetos para transformar en nodo y los meto en el array
-    this.wrapperData.forEach ( post => this.elementos.push(  {
-      tag: "img",
-      id: post.postID,
-      listaClases: ["grid-post"],
-      listaAcciones: [
-                      {evento:'click',accion:()=>cambiarPostActual(this.postViewer,post.postID)},
-
-                                        ],
-      source: post.foto
-    },) )
+    this.wrapperData.forEach ( post => this.elementos.push(  
+      
+      {tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+                              id: "container-galeria-pic",
+                              listaClases: ["div-like-comentarios"],
+                              listaAcciones: undefined,
+                
+                              hijos:[{
+                                tag: "img",
+                                id: post.postID,
+                              listaClases: [/*"grid-post"*/'grid-post-select-pic'],
+                              listaAcciones: [{evento:'click',accion:()=>cambiarPostActual(this.postViewer,post.postID)}, ],
+                              source: post.foto
+                              }]}
+      
+      ) )
 
 
     //Ya tengo los datos, los mando a renderizar y agregar al container del objeto
