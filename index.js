@@ -66,26 +66,39 @@ var containerGaleriaFotos;
 
 
 function creacionDePerfilesAleatorios(){
+ 
+ /* const url = 'https://dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com/?format=json&gender=b&cc=all&email=gmail.com%2Cyahoo.com&pwlen=12&ip=a&phone=l%2Ct%2Co&seed=helloworld&count=10&maxage=40&minage=30&uuid=1&color=1&lic=1&images=1';
+const options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': '00273837a8msh24955f80bea6a7cp1377c4jsn7688509e0d88',
+		'X-RapidAPI-Host': 'dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com'
+	}
+}*/
 
-  const url = 'https://dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com/?format=json&gender=b&cc=all&email=gmail.com%2Cyahoo.com&pwlen=12&ip=a&phone=l%2Ct%2Co&seed=helloworld&count=10&maxage=40&minage=30&uuid=1&color=1&lic=1&images=1';
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key': '00273837a8msh24955f80bea6a7cp1377c4jsn7688509e0d88',
-      'X-RapidAPI-Host': 'dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com'
-    }
-  }
+const cantidadRegistrosPedidos = 10;
+const url = 'https://random-data-api.com/api/v2/users?size=' + cantidadRegistrosPedidos + '&is_xml=true'
   
   //La idea es generar mediante API 10 user al azar e insertar a la base de datos al iniciar la APP
   //A esos user ponerles fotos de perfil y generarle algunos posts.
-    fetch(url, options)
+    fetch(url, /*options*/)
     .then( response => response.json())
-    .then( data => {console.log(data[0])
-                  baseDatosApp.asignarNuevoUserID()
+    .then( data => { //Voy a tomar username,,password, email, perfil y el estado lo hago como "hola soy + nombree de perfil"
+                   
+                      //console.log(data)
+                    data.forEach( registro => { 
+                                           
+                                            baseDatosApp.agregarNuevoUsuario(registro.username, registro.password,registro.email,registro.avatar,'Hola, soy '+ registro.username)                                        
+                                            
+                                          
+                                          })
+
+                                        //Ya poble de user aleatorios, ahora invento 20 posts y los asigno de manera aleatoria
+    
     }
     
           
-    )
+    ).catch("API Error")
 
   
   }

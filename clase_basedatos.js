@@ -419,13 +419,50 @@ let i=0;
 }
 
 //Retorna el ID para un nuevo usuario a post y ese ID siempre sera el siguiente al ultimo registro
+//Este metodo es privado ya que la BD es quien asigna id.
 asignarNuevoUserID() {
   //Me paro en el ulti registro.
-    const ultimoRegistro = this.usuarios[this.usuarios.lenght-1]
-    //Tengo un objeto, tomo el ID, lo transformo en numero y le sumo 1.
-    //return ultimoRegistro.userID + 1;
-
+    const ultimoRegistro = this.usuarios[this.usuarios.length-1]
+    return ultimoRegistro.userID + 1;
+  
 }
+
+asignarNuevoPostID() {
+  //Me paro en el ulti registro.
+    const ultimoRegistro = this.posts[this.posts.length-1]
+    return ultimoRegistro.postID + 1;
+  
+}
+
+//Construye un nuevo usuario con los parametros recibidos y los mete a la BD
+//Estado generamos algo vacio x ahora
+agregarNuevoUsuario(userName,password,email,urlFotoPerfil,estado){
+  let nuevoUsuario = {userID:this.asignarNuevoUserID,userName:userName,  password:password, fotoPerfil:urlFotoPerfil, email:email,estado:estado}
+  this.usuarios.push(nuevoUsuario)
+  //console.log("Nuevo Usuario: ", nuevoUsuario)
+  //console.log(this.usuarios)
+}
+
+
+agregarNuevoPost(userID,fecha,hora,texto,foto){
+
+  let nuevoPost = {
+
+    postID: this.asignarNuevoPostID,
+    userID: userID,
+    fecha:fecha,
+    hora:hora,
+    texto:texto,
+    likes:[], //Comentarios y likes inician vacios.
+    comentarios:[],
+    foto: foto, //Recibe URL
+  }
+
+  this.posts.push(nuevoPost)
+  console.log(nuevoPost)
+}
+
+
 
 
 }
