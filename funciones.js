@@ -1,4 +1,3 @@
-
 function transformarObjetoEnNodo(item) {
   
   /* Esta funcion es un constructor de nodos que recibe un objeto del tipo 
@@ -80,15 +79,11 @@ let archivoPosts;
                     .then( response => response.json())
                     .then( (dataArchivoPosts) => {
                               archivoPosts = dataArchivoPosts ;
-                               //console.log(dataArchivoPosts)
-                              //Ya tengo varios archivos, Ahora puedo crear la base de datos y vincularla a mi variable.
+                             //Ya tengo ambos archivos, Ahora puedo crear la base de datos y vincularla a mi variable.
                               baseDatosApp = new baseDatos(archivoUsuarios,archivoPosts)
 
-                            /**IMPORTANTE PARA LA CREACION DE PERFILES */
-                              //console.log(baseDatosApp.existeUsuario('guixr24'))
-                              //TENEMOS LA DATA DE BASES VINCULADA, SUPONIENDO QUE TODO SALIO OK COMPROBAMOS USUARIO Y CONTRASEÑA
-                              //comprobarUsuario()
-                              })
+                            
+                      })
                     })
 
 
@@ -114,13 +109,13 @@ if (postsUsuarioLogueado.length > 0){
        postUserViewer = new postViewer('id-post-viewer-usuario-logueado','post-viewer-container',postsUsuarioLogueado[0],transformarObjetoEnNodo)
     
       
-    //Renderizo el que selecciona los post
+    //Renderizo el objeto que selecciona los post
     selectorPostViewer = new selectorPosts( 'id-selector-Posts-usuario','selector-posts-container',postsUsuarioLogueado,postUserViewer,transformarObjetoEnNodo)
     selectorPostViewer.engancharEnNodo(mainContainer)
     postUserViewer.engancharEnNodo(mainContainer)
     
 
-//console.log(primerPostUsuarioLogueado[0])
+
 }
 else alert("Usuario no tiene post") //Usar sweet alkert
 
@@ -469,3 +464,15 @@ fetch(unplashURLCategoria(categoriaElegida,'20'))
 
         
 }
+
+
+
+//Esta la usare para pasar array con datos predeterminados y que me devuelva aleatoriamente uno de los valores contenidos, ejemplo el de categoria de imagenes.
+const getDatoAleatoriaArray = (unArray) => { 
+  //Se supone es un array no vacio.
+       if (unArray.length >0) return unArray[generarValorAleatorio(0,unArray.length-1)]
+         else return unArray[0]
+}
+
+
+const generarValorAleatorio = (min,max) => Math.floor((Math.random() * (max - min + 1)) + min)

@@ -423,6 +423,7 @@ let i=0;
 asignarNuevoUserID() {
   //Me paro en el ulti registro.
     const ultimoRegistro = this.usuarios[this.usuarios.length-1]
+    //console.log('Numero ultimo registro: ', ultimoRegistro.userID)
     return ultimoRegistro.userID + 1;
   
 }
@@ -435,20 +436,28 @@ asignarNuevoPostID() {
 }
 
 //Construye un nuevo usuario con los parametros recibidos y los mete a la BD
-//Estado generamos algo vacio x ahora
+//Estado generamos algo vacio x ahora.
+//LO va a crear siempr y cuando el userName no exista en la BD, entonces lo crea y devueve true o false 
 agregarNuevoUsuario(userName,password,email,urlFotoPerfil,estado){
-  let nuevoUsuario = {userID:this.asignarNuevoUserID,userName:userName,  password:password, fotoPerfil:urlFotoPerfil, email:email,estado:estado}
-  this.usuarios.push(nuevoUsuario)
-  //console.log("Nuevo Usuario: ", nuevoUsuario)
-  //console.log(this.usuarios)
+
+  if (!this.existeUsuario(userName)){
+    let nuevoUsuario = {userID:this.asignarNuevoUserID(),userName:userName,  password:password, fotoPerfil:urlFotoPerfil, email:email,estado:estado}
+    this.usuarios.push(nuevoUsuario)
+    //console.log("Nuevo Usuario: ", nuevoUsuario)
+    //console.log(this.usuarios)
+    return true;
+  }
+  else return false;
 }
 
 
 agregarNuevoPost(userID,fecha,hora,texto,foto){
 
+  
+
   let nuevoPost = {
 
-    postID: this.asignarNuevoPostID,
+    postID: this.asignarNuevoPostID(),
     userID: userID,
     fecha:fecha,
     hora:hora,
@@ -459,7 +468,7 @@ agregarNuevoPost(userID,fecha,hora,texto,foto){
   }
 
   this.posts.push(nuevoPost)
-  console.log(nuevoPost)
+  //console.log(nuevoPost)
 }
 
 
