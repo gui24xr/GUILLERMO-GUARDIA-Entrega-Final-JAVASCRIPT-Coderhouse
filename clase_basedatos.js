@@ -417,4 +417,15 @@ let i=0;
 
 
 }
+
+//Retorna el ID para un nuevo usuario a post y ese ID siempre sera el siguiente al ultimo registro
+asignarNuevoUserID() {
+  //Me paro en el ulti registro.
+    const ultimoRegistro = this.usuarios[this.usuarios.lenght-1]
+    //Tengo un objeto, tomo el ID, lo transformo en numero y le sumo 1.
+    //return ultimoRegistro.userID + 1;
+
+}
+
+
 }

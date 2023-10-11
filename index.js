@@ -1,11 +1,28 @@
-//------------------------------------------------------------------------------------------
-// Urls unplash
-const generarAleatorio = (min,max) => Math.floor((Math.random() * (max - min + 1)) + min)
-const urlPicsCBR = "https://api.unsplash.com/search/photos?query=cbr&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
+//-----------------------------------------------------------------------------------------------//
+// URLS UNPLASH
+//-----------------------------------------------------------------------------------------------//
+
+const generarValorAleatorio = (min,max) => Math.floor((Math.random() * (max - min + 1)) + min)
+
+//Esta funcion la uso para obtener una URL de unplash con una cateoria deseada o irla cambiando segun lo que le pida
+const unplashURLCategoria = (categoria,cantidad) => 'https://api.unsplash.com/search/photos?query=' + categoria + '&per_page='+ cantidad +'&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k';
+
+//En este array guardo categorias posibles para pasarle de forma aleatoria al parametro categoria.
+const categoriasImagenes = ['helmet','helmets','motorbikes','moto','shoei','airoh','dainese','cbr','hjc','alpinestars','ktm','ducati','kawasaki','motogp','crf450']
+
+const urlPicsCBR = "https://api.unsplash.com/search/photos?query=motorbikes&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
 const urlPicsHelmet = "https://api.unsplash.com/search/photos?query=helmet&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
 const urlPicsMotorcycle = "https://api.unsplash.com/search/photos?query=motorcycle&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
+
+
+
+var nuevaAlturaMainContainer;
+//-----------------------------------------------------------------------------------------------//
+// DECLARACION E INICIALIZICION VARIABLES GLOBALES DE INSTANCIAS
+//-----------------------------------------------------------------------------------------------//
 //Base de datos
 var baseDatosApp = undefined; //= new baseDatos(archivoUsuarios,archivoPosts)
+conectarBaseDatos ()
 var usuarioLogueado = undefined;
 
 
@@ -13,13 +30,14 @@ var usuarioLogueado = undefined;
 const headerContainer=document.getElementsByTagName('header')[0]
 const mainContainer=document.getElementById('main-container')
 
+
+
+
+
 //Componentes que usaremos.
-
-var mainFormLogin = new wrapperElements('id-main-login-form','login-form',elementosLoginForm,transformarObjetoEnNodo,"javascript:conectarBaseDatos()")
-
-//mainFormLogin.engancharEnNodo(mainContainer)
-
+var mainFormLogin = new wrapperElements('id-main-login-form','login-form',elementosLoginForm,transformarObjetoEnNodo,"javascript:comprobarUsuario()")
 const registerForm= new wrapperElements('id-register-form','login-form',elementosRegisterForm,transformarObjetoEnNodo,"javascript:comprobarRegistroUsuario()")
+
 //registerForm.engancharAlNodoPadre(mainContainer,transformarObjetoEnNodo)
 //const formPrueba = new wrapperElements('id-register-formp','login-form',elementosRegisterForm,transformarObjetoEnNodo,"javascript:comprobarRegistroUsuario()")
 //formPrueba.engancharAlNodoPadre(mainContainer)
@@ -32,6 +50,13 @@ bannerEncabezado.engancharEnNodo(headerContainer)
 const bannerSesionActual = new bannerSesion('id-banner-sesion','banner-sesion',elementosBannerSesion,transformarObjetoEnNodo)
 bannerSesionActual.engancharAlNodoPadre(headerContainer)
 
+
+// Una vez creadas las varras Configuro el tamaño del main container y pongo un fondo de pantalla aleatorio.
+configurarMainContainer(false)
+selectBackgroundScreen(false)
+
+
+
 var bannerSolapas;
 var postUserViewer;
 var selectorPostViewer;
@@ -40,75 +65,35 @@ var postViewerGeneral;
 var containerGaleriaFotos;
 
 
+function creacionDePerfilesAleatorios(){
 
-
-/* Estas variables las voy a utilizar para manejar la aparicion y desaparicion de pantallas */
-
-var galeriaVisible = false;
-var solapaRegistroUsuario = false;
-
-var solapaTodosLosusuarios = false;
-var solapaUsuarioLogueado = false;
-var loginScreenVisible = true; //Empieza en true xq al arrancar muesra el login form
-
-
-
-//console.log(window.screen.height)
-//console.log(document.getElementById('id-banner-header').clientHeight)
-//console.log(document.getElementById('main-container').clientHeight)
-
-//Obtengo tamaño ventana, le resto el de las barras y se lo asigno al main
-
-function resizeMainCOntainer(sesion){
-
-  let hScreenContainer = window.screen.availHeight
-let hBannerHeader = document.getElementById('id-banner-header').clientHeight
-let hBannerSesion = document.getElementById('id-banner-sesion').clientHeight
-
-let mainContainerNodo = document.getElementById('main-container')
-
-let nuevaAlturaMainContainer = hScreenContainer-hBannerHeader-hBannerSesion
-console.log(nuevaAlturaMainContainer + 'px')
-
- if (sesion == 'cerrada') {
-
-//console.log(hMainContainer,hBannerHeader,hBannerSesion)
-
-
-
-
-//Pongo imagen aleatoria de unplash;
-
-fetch(urlPicsCBR)
-.then(response =>  response.json())
-.then(data => {
-
-    let arrayElementos = []
-    let nuevoObjeto;
-    console.log(/*data.results[3].urls.regular)*/data.results)
-    let resultados = data.results
-    let nuevaImage = resultados[generarAleatorio(0,resultados.length -1)].urls.small
-   mainContainer.style.backgroundImage = 'url(' + nuevaImage +')'
-
-   mainContainerNodo.style.height = nuevaAlturaMainContainer + 'px'
-//mainContainer.style.backgroundImage = 'url(' +'../imagenes/fondopic.jpg' +')'
-
-mainContainerNodo.style.display = 'flex'
-mainContainerNodo.style.justifyContent = 'center'
-mainContainer.style.alignItems= 'center'
-mainContainer.style.backgroundSize = 'cover'
-mainContainer.style.backgroundRepeat = 'no-repeat'
+  const url = 'https://dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com/?format=json&gender=b&cc=all&email=gmail.com%2Cyahoo.com&pwlen=12&ip=a&phone=l%2Ct%2Co&seed=helloworld&count=10&maxage=40&minage=30&uuid=1&color=1&lic=1&images=1';
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '00273837a8msh24955f80bea6a7cp1377c4jsn7688509e0d88',
+      'X-RapidAPI-Host': 'dawn2k-random-german-profiles-and-names-generator-v1.p.rapidapi.com'
+    }
+  }
+  
+  //La idea es generar mediante API 10 user al azar e insertar a la base de datos al iniciar la APP
+  //A esos user ponerles fotos de perfil y generarle algunos posts.
+    fetch(url, options)
+    .then( response => response.json())
+    .then( data => {console.log(data[0])
+                  baseDatosApp.asignarNuevoUserID()
+    }
+    
+          
+    )
 
   
-  })
-
-}
-else if (sesion == 'abierta'){
+  }
 
 
 
-}
 
-}
 
-resizeMainCOntainer('cerrada')
+
+  creacionDePerfilesAleatorios() 
+

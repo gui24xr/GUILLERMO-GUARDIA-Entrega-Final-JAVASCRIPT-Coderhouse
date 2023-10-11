@@ -83,9 +83,11 @@ let archivoPosts;
                                //console.log(dataArchivoPosts)
                               //Ya tengo varios archivos, Ahora puedo crear la base de datos y vincularla a mi variable.
                               baseDatosApp = new baseDatos(archivoUsuarios,archivoPosts)
+
+                            /**IMPORTANTE PARA LA CREACION DE PERFILES */
                               //console.log(baseDatosApp.existeUsuario('guixr24'))
                               //TENEMOS LA DATA DE BASES VINCULADA, SUPONIENDO QUE TODO SALIO OK COMPROBAMOS USUARIO Y CONTRASEÑA
-                              comprobarUsuario()
+                              //comprobarUsuario()
                               })
                     })
 
@@ -146,6 +148,8 @@ function comprobarUsuario (){
 
 function abrirSesionUsuario(usuario){
 
+  //selectBackgroundScreen(true)
+  configurarMainContainer(true)
   //Seteo la variable global con el nombre de usuario que se logueo y usare para todi
   usuarioLogueado = usuario
   //Doy la bienvenida y quita de la visualizacion los componentes de form
@@ -170,6 +174,8 @@ function abrirSesionUsuario(usuario){
 
 function cerrarSesion (){
 
+  selectBackgroundScreen(false)
+  configurarMainContainer(false)
    //Vuelve todo estado inicial.
   //mainContainer.className = 'class-main-container'
   bannerSesionActual.cerrarSesion()
@@ -239,7 +245,7 @@ function renderizarGaleria(){
   const url = "https://api.unsplash.com/search/photos?query=moto&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
   
   //const imageDiv = document.querySelector('.image');
-    fetch(url)
+    fetch(unplashURLCategoria('moto','60'))
         .then(response =>  response.json())
         .then(data => {
 
@@ -372,4 +378,94 @@ function renderizarLoginScreen(){
   mainFormLogin =new wrapperElements('id-main-login-form','login-form',elementosLoginForm,transformarObjetoEnNodo,"javascript:conectarBaseDatos()")
  mainFormLogin.engancharEnNodo(mainContainer)
 
+}
+
+
+
+
+
+
+
+
+function configurarMainContainer(sesionAbierta){
+
+
+  let hScreenContainer = window.screen.availHeight
+  let hBannerHeader = document.getElementById('id-banner-header').clientHeight
+  let hBannerSesion = document.getElementById('id-banner-sesion').clientHeight
+
+
+  //Asigno la nueva altura al main container.
+  nuevaAlturaMainContainer = hScreenContainer-hBannerHeader-hBannerSesion
+  mainContainer.style.height = nuevaAlturaMainContainer.toString() + 'px'
+  //console.log(nuevaAlturaMainContainer + 'px')
+     
+  if (sesionAbierta){
+    mainContainer.style.display = 'flex'
+    mainContainer.style.justifyContent = 'space-around'
+    mainContainer.style.backgroundImage = 'none'
+    mainContainer.style.backgroundColor = 'white'
+  }
+  else{
+
+    
+    //mainContainer.style.alignItems= 'center'
+
+    mainContainer.style.display = 'flex'
+    mainContainer.style.justifyContent = 'center'
+    mainContainer.style.alignItems= 'center'
+  }
+                  
+}
+
+
+
+
+function selectBackgroundScreen (sesionAbierta){
+
+
+//Elijo una categoria de forma aleatoria.
+let categoriaElegida = categoriasImagenes[generarValorAleatorio(0,categoriasImagenes.length-1)]
+    
+//Pido 20 imagenes de la categoria
+fetch(unplashURLCategoria(categoriaElegida,'20'))
+.then(response =>  response.json())
+.then(data => {
+
+            //Busco una imagen horizontal dentro del array de forma aleatoria para lo cual entro al while y mientras no sea horizontal seguira buscando
+            let imagenSeleccionada;
+            let imagenCorrecta = false;
+
+            while (!imagenCorrecta){
+              imagenSeleccionada = data.results[generarValorAleatorio(0,data.results.length -1)]/*.urls.small*/
+              if ( imagenSeleccionada.width > imagenSeleccionada.height ) imagenCorrecta = true
+            }
+
+          //Obtengo un objeto que pertenece a una imagen horizontal y del mismo tomo la informacion que necesito.
+          const {urls, width:imagenSeleccionadaWidth, height:imagenSeleccionadaHeight} = imagenSeleccionada //urls es tamnien objeto
+
+          //Asigno la imagen al fondo del main container.
+            mainContainer.style.backgroundImage = 'url(' + urls.regular +')'
+            
+            /*sesionAbierta 
+            ? mainContainer.style.filter = 'grayscale(60%)' 
+            : mainContainer.style.filter = ''
+              */
+           /* sesionAbierta 
+            ? mainContainer.style.backgroundAttachment
+            : mainContainer.style.filter = ''*/
+
+            //Calculo el tamaño que usare.
+           let widthContainer = mainContainer.clientWidth 
+            backgroundHeight = nuevaAlturaMainContainer
+       
+
+            //Setep las caracterstisticas para estirar la imagen de manera deseada en main container.
+            mainContainer.style.backgroundRepeat = 'no-repeat'
+            mainContainer.style.backgroundSize = widthContainer.toString()+'px '+backgroundHeight.toString()+'px'
+        })
+
+
+
+        
 }
