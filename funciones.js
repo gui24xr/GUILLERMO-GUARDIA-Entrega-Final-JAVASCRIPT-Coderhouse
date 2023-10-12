@@ -1,3 +1,4 @@
+
 function transformarObjetoEnNodo(item) {
   
   /* Esta funcion es un constructor de nodos que recibe un objeto del tipo 
@@ -194,8 +195,30 @@ function cambiarPostActual(unPostViewer,idPostNuevo){
 
 function comprobarRegistroUsuario(){
 
-  let nodos = document.getElementById('id-register-form').children
-  console.log(nodos)
+
+
+  const usernameIngresado = document.getElementById('register-form-user-input').value
+  const passwordIngresado = document.getElementById('register-form-password-input').value
+  const passwordRepeatIngresado = document.getElementById('register-form-re-password-input').value
+  const emailIngresado = document.getElementById('register-form-email-input').value 
+  const fotoPerfilIngresada = document.getElementById('register-form-perfil-img').src
+
+  //Existe usuario?
+  let condicion1 = !baseDatosApp.existeUsuario(usernameIngresado)
+  let condicion2 = baseDatosApp.passwordAceptado(passwordIngresado) 
+  let condicion3 = passwordIngresado == passwordRepeatIngresado 
+  let condicion4 = esEmailValido(emailIngresado)
+
+  //Si todas estas condiciones proceso a crear el usuario, si no emito un mensaje de error.
+  if (condicion1 && condicion2 && condicion3 && condicion4){
+
+    //Si lo creo de forma satisfactoria aviso mando a iniciar sesion
+    console.log(fotoPerfilIngresada.source)
+    if (baseDatosApp.agregarNuevoUsuario(usernameIngresado,passwordIngresado,emailIngresado,fotoPerfilIngresada)) alert("todo ok")
+  }
+  else{
+    alert("mensaje de error con switch")
+  }
 
 }
 
@@ -246,7 +269,7 @@ function renderizarGaleria(){
 
             let arrayElementos = []
             let nuevoObjeto;
-            console.log(/*data.results[3].urls.regular)*/data.results)
+            //console.log(/*data.results[3].urls.regular)*/data.results)
             let resultados = data.results
             //console.log(data.results[3].urls)
       
@@ -276,14 +299,7 @@ function renderizarGaleria(){
 
         )
         containerGaleriaFotos  = new wrapperElements('id-wrapper-galeria','grid-galeria-container',arrayElementos,transformarObjetoEnNodo)
-        //Ejecutar quitar elementos de otras pantallas
-
-       // postUserViewer.desengancharDeDom()
-        //selectorPostViewer.desengancharDeDom()
-        //postViewerGeneral.desengancharDeDom()
-        //selectorViewerGeneral.desengancharDeDom()
-
-        containerGaleriaFotos.engancharAlNodoPadre(mainContainer)
+        containerGaleriaFotos.engancharEnNodo(mainContainer)
       }
         
         
@@ -314,40 +330,30 @@ idNodosParaBorrar.forEach( id => document.getElementById(id).remove())
 
 function renderizarSelectorFotoPerfil(){
 
-  //Muestra una galeria de fotos bajadas de unplash. Recorro el json de unplash.
-  //const url = "https://api.unsplash.com/search/photos?query=helmet&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
-  
-  //const imageDiv = document.querySelector('.image');
-    fetch(urlPicsHelmet)
+    //Tomo fotos de unplash para que el usuario seleccione para foto de perfil. Los recolecto en un array y luego los mando a renderizar
+
+    fetch(unplashURLCategoria('alpinestars',10))
         .then(response =>  response.json())
         .then(data => {
 
+            
             let arrayElementos = []
             let nuevoObjeto;
             console.log(/*data.results[3].urls.regular)*/data.results)
             let resultados = data.results
-            //console.log("fdfxhcg", resultados)
-      
             //tomo cada url para constuir un pbjeto y meterlo al array que le voy a dar a renderizar a mi wrapper container.
-            resultados.forEach(    x => {console.log (x.urls.small)
-                                    nuevoObjeto = { tag: "img",
-                                                      id: 'imggaleria',
-                                                   listaClases: ['selector-picperfil-container-pics'],
-                                                    listaAcciones: [{evento:'click',accion:()=>{
-                                                      //console.log(x.urls.thumb)
-                                                     document.getElementById('register-form-fotoperfil-input').value = x.urls.thumb
-                                                    
-                                                    }}],
-                                              source: x.urls.small
-                                               }
-
-                                      arrayElementos.push(nuevoObjeto)
-              
-              }
-
-
-
-        )
+            resultados.forEach(  x => {
+              //console.log (x.urls.small)
+              nuevoObjeto = { tag: "img",id: 'perfilPicSelector-pic',listaClases: ['selector-picperfil-container-pics'],
+                            listaAcciones: [{evento:'click',accion:()=>{document.getElementById('register-form-perfil-img').src = x.urls.thumb}}],
+                            source: x.urls.small}
+                            
+                            //Ya prepare los objetos a renderizar y a cada imagen le puse la accion de que seleccione el input y le coloque el valor de url 
+                            //De la imagen que mostrara y ahora la meto al array de elementos para mandar a renderizar.
+                            arrayElementos.push(nuevoObjeto)
+                            })
+        
+        //Construyo el wrapper donde mostrare las fotos de perfil a elegir
         containerGaleriaFotos  = new wrapperElements('id-wrapper-perfilpic-selector','selector-picperfil-container',arrayElementos,transformarObjetoEnNodo)
         //Ejecutar quitar elementos de otras pantallas
 
@@ -356,7 +362,7 @@ function renderizarSelectorFotoPerfil(){
         //postViewerGeneral.desengancharDeDom()
         //selectorViewerGeneral.desengancharDeDom()
 
-        containerGaleriaFotos.engancharAlNodoPadre(mainContainer)
+        containerGaleriaFotos.engancharEnNodo(mainContainer)
       }
         
         
@@ -366,7 +372,7 @@ function renderizarSelectorFotoPerfil(){
 
 }
 
-
+/*
 
 function renderizarLoginScreen(){
 
@@ -376,7 +382,7 @@ function renderizarLoginScreen(){
 }
 
 
-
+*/
 
 
 
@@ -476,3 +482,47 @@ const getDatoAleatoriaArray = (unArray) => {
 
 
 const generarValorAleatorio = (min,max) => Math.floor((Math.random() * (max - min + 1)) + min)
+
+
+function creacionDePerfilesAleatorios() {
+  
+  const cantidadRegistrosPedidos = 10;
+  const urlApiDatos = "https://random-data-api.com/api/v2/users?size=" + cantidadRegistrosPedidos + "&is_xml=true";
+
+  //La idea es generar mediante API 10 user al azar e insertar a la base de datos al iniciar la APP y ademas a esos user ponerles fotos de perfil y generarle algunos posts.
+  fetch(urlApiDatos)
+    .then((response) => response.json())
+    .then((data) => {
+      //Voy a tomar username,,password, email, perfil y el estado lo hago como "hola soy + nombree de perfil"
+        data.forEach((registro) => {
+        //COn esta los creamos y sabemos si esa creacion fue satisfactoria.
+        if (baseDatosApp.agregarNuevoUsuario(registro.username,registro.password,registro.email,registro.avatar, "Hola, soy " + registro.username) == true){
+          //Vamos a crear por cada usuario nuevo entre 1 y 10 posts con fotos de unplash y categoria al azar respecto a la tematica del sitio.
+          let cantidadNuevosPost = generarValorAleatorio(1, 4);
+          let horaPost = "09:30"; //Despues genero esto de manera aleatorio
+          let fechaPost = "6-10-23"; //Despues genero esto de manera aleatorio
+          let texto = "Este post es de" + registro.username; //Despues lo generamos aleatorio.
+          let categoria = getDatoAleatoriaArray(categoriasImagenes); //console.log("Catego: ", categoria)
+          //Le pido la cantidad deseada a unplas y por cada imagen creo un post
+          fetch(unplashURLCategoria(categoria, cantidadNuevosPost))
+            .then((response) => response.json())
+            .then((data) => {
+              //tenemos un array con la cantidad pedida de objetos, lo recorro y voy creando posts para este user
+              data.results.forEach((x) => { baseDatosApp.agregarNuevoPost(registro.username,fechaPost,horaPost,texto,x.urls.regular);});
+            });
+        }
+      });
+
+      
+    })
+  }
+
+
+
+
+  function esEmailValido(email) {
+    
+      var condiciones = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+   if (condiciones.test(email)) return true; return false // El email es válido.
+  }

@@ -332,7 +332,9 @@
 .selector-picperfil-container{
   display: flex;
   flex-wrap: wrap;
-  width: 50%;
+  width: 40%;
+  max-height: 70%;
+  justify-content: center;
 
   border-radius:10px;
   border:10px solid #ffffff;
@@ -348,15 +350,14 @@
   width:120px;
   height:120px;
   border-radius:150px;
-  border:10px solid #ffffff;
-  border: 2px solid rgb(255, 255, 255);
-  margin: 2px;
-  padding: 0;
+ 
+  margin: 15px 15px 15px 15px;
+  padding: 3px;
 
   &:hover {
     cursor: pointer;
     background-blend-mode: soft-light;
-    transform: scale(4.1);
+    transform: scale(1.2);
     box-shadow: -32px 22px 15px 0px rgba(0, 0, 0, 0.1),
       inset 0px 21px 45px 22px rgba(0, 0, 0, 0.1),
       0px 10px 41px -3px rgba(0, 0, 0, 0.1),
@@ -367,7 +368,7 @@
     border-radius: 0px 0px 39px 0px;
     -moz-border-radius: 0px 0px 39px 0px;
     -webkit-border-radius: 0px 0px 39px 0px;
-    border: 0px solid #000000;
+  
   }
 
 }

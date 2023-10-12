@@ -1,7 +1,7 @@
 class wrapperElements {
   constructor(wrapperId, wrapperClass, wrapperData,renderFunction,formAction) {
     //this.nodoPadre = nodoPadre;
-    console.log(arguments.length)
+    //console.log(arguments.length)
     // 4 Argumentos es xq simplemente sera un div
     //5 Argumentos es xq sera un form y en el 5to parametro viene un string con el formAction
     if (arguments.length == 4) this.container = document.createElement("div");
@@ -23,8 +23,8 @@ class wrapperElements {
   }
 
   
-  /*ocultar = () => this.container.classList.toggle("clase-invisible");
-  mostrar = () => this.container.classList.toggle("clase-invisible");*/
+  ocultar = () => this.container.classList.toggle("clase-invisible");
+  /*mostrar = () => this.container.classList.toggle("clase-invisible");*/
   procesarObjetosIngresados(){
 
     let nuevoNodo;
@@ -37,11 +37,6 @@ class wrapperElements {
     
   }
 
-engancharAlNodoPadre(nodoPadre) { //Construye y engancha.
-   
-    
-    nodoPadre.appendChild(this.container);
-  }
 
 
 
@@ -52,7 +47,7 @@ engancharAlNodoPadre(nodoPadre) { //Construye y engancha.
     this.referenciaNodo = document.getElementById(this.container.id)
     //ME agarro una referencia al nodo donde lo enganche
     this.nodoGancho = document.getElementById(nodoPadre.id)
-    console.log(this.nodoGancho)
+    //console.log(this.nodoGancho)
   
   }
 

@@ -62,20 +62,6 @@ class selectorPosts  {
   ocultar = () => this.container.classList.toggle("clase-invisible")
   mostrar = () => this.container.classList.toggle("clase-invisible")
 */
-  //Sobre escribo el metodo xq este wrapper se dibuja diferente
-  engancharAlNodoPadre(nodoPadre) {
-
-    //Agarro cada elemento del array recibido  lo transformo en lo que quiero para renderizar
-
-
-   
-
-
-
-    nodoPadre.appendChild(this.container)
-   
-
-}
 
 
 borrar = () =>{

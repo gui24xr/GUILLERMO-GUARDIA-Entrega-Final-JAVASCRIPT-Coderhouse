@@ -53,7 +53,7 @@ class postViewer {
 
 
     this.containerPostPic = new wrapperElements('id-post-viewer-pic','post-viewer-container-pic',picPost,this.renderFunction)
-    this.containerPostPic.engancharAlNodoPadre(this.container)
+    this.containerPostPic.engancharEnNodo(this.container)
 
 
     this.postIDActual = postID;
@@ -126,7 +126,7 @@ class postViewer {
 
     // Creo el wrapper donde iran los elementos mostrados y los asigno a containerPostInfo
     this.containerPostInfo = new wrapperElements('postviewer-container-info', 'container-post-info', objetosRenderizar,this.renderFunction);
-    this.containerPostInfo.engancharAlNodoPadre(this.container);
+    this.containerPostInfo.engancharEnNodo(this.container);
 
 
   }

@@ -5,15 +5,16 @@ class bannerSesion extends wrapperElements {
     
     this.accionBotonConfiguracion = () => alert("Configuracion")
     this.accionBotonLogout = () => cerrarSesion()
+    this.accionBotonUserName = () => mainFormLogin.engancharEnNodo(mainContainer)
  
   }
 
   procesarObjetosIngresados(){ //Sobre escribo el metodo
 
     this.loginbar = new wrapperElements('id-banner-sesion','banner-sesion-login-bar',elementosBannerSesion,transformarObjetoEnNodo)
-    this.loginbar.engancharAlNodoPadre(this.container)
-    this.solapas = undefined
-
+    this.loginbar.engancharEnNodo(this.container)
+    this.solapas = new wrapperElements('id-banner-solapas','banner-sesion-solapas-bar',elementosBannerSolapas,transformarObjetoEnNodo)
+    
 
   }
 
@@ -34,11 +35,13 @@ class bannerSesion extends wrapperElements {
     this.iconoLogout.className = 'banner-sesion-iconos-encendidos'
     this.iconoLogout.addEventListener('click' ,this.accionBotonLogout)
    
-
-    this.solapas = new wrapperElements('id-banner-solapas','banner-sesion-solapas-bar',elementosBannerSolapas,transformarObjetoEnNodo)
+    this.solapas.engancharEnNodo(this.container)
+    this.iconoLogout.removeEventListener('click',  ()=> mainFormLogin.engancharEnNodo(mainContainer))
+  
    
-    this.solapas.engancharAlNodoPadre(this.container)
-    this.loginbar.engancharAlNodoPadre(this.container)
+   
+   
+ 
 
   
   }
@@ -53,7 +56,8 @@ class bannerSesion extends wrapperElements {
     this.iconoLogout.className = 'banner-sesion-iconos-apagados'
     this.iconoLogout.removeEventListener('click' ,this.accionBotonLogout)
     
-
+    //Oculto el menu de navegacion de secciones.
+    this.solapas.desengancharDeDom()
 
   }
 }
@@ -108,3 +112,40 @@ const elementosBannerSesion = [
     source: "./imagenes/icons/ico_cerrarsesion.png",
   },
 ];
+
+
+
+const elementosBannerSolapas = [
+
+
+  {
+    tag: "h1",
+    id: "id-banner-solapas-boton",
+    listaClases: ["banner-solapas-text"],
+    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarScreenUsuarioLogueado()}}],
+    innerText: "MI MOTOGRAM",
+  },
+
+  {
+    tag: "h1",
+    id: "id-banner-solapas-boton",
+    listaClases: ["banner-solapas-text"],
+    listaAcciones: [{evento:'click',accion: ()=> desrenderizarScreenActual()}] ,
+    innerText: "NUEVO POST",
+  },
+  {
+    tag: "h1",
+    id: "id-banner-solapas-boton",
+    listaClases: ["banner-solapas-text"],
+    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarSolapaOtrosMoteros()}}],
+    innerText: "OTROS MOTEROS",
+  },
+  {
+    tag: "h1",
+    id: "id-banner-solapas-boton",
+    listaClases: ["banner-solapas-text"],
+    listaAcciones: [{evento:'click',accion: ()=> {desrenderizarScreenActual(),renderizarGaleria()}}],
+    innerText: "GALERIA",
+  },
+
+]

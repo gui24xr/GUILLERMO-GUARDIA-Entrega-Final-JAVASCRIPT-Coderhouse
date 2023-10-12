@@ -33,40 +33,7 @@ const elementosHeaderBanner = [
   },
 ];
 
-const elementosBannerSolapas = [
 
-
-  {
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarScreenUsuarioLogueado()}}],
-    innerText: "MI MOTOGRAM",
-  },
-
-  {
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=> desrenderizarScreenActual()}] ,
-    innerText: "NUEVO POST",
-  },
-  {
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarSolapaOtrosMoteros()}}],
-    innerText: "OTROS MOTEROS",
-  },
-  {
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=> {desrenderizarScreenActual(),renderizarGaleria()}}],
-    innerText: "GALERIA",
-  },
-
-]
 
 const elementosLoginForm = [
   {
@@ -141,31 +108,8 @@ const elementosRegisterForm = [
     innerText: "NUEVO USUARIO",
   },
 
-  {
-    tag: "input",
-    id: "register-form-email-input",
-    listaClases: ["login-form-input"],
-    listaAcciones: undefined,
-    type: "email",
-    placeHolder: "E-mail",
-  },
 
-  {
-    tag: "h1",
-    id: "register-form-label-fecha-nac",
-    listaClases: ["login-form-text"],
-    listaAcciones: undefined,
-    innerText: "Fecha de Nacimiento.",
-  },
 
-  {
-    tag: "input",
-    id: "register-form-fechanacimiento-input",
-    listaClases: ["login-form-input"],
-    listaAcciones: undefined,
-    type: "date",
-    placeHolder: "Fecha de nacimiento",
-  },
 
 
   {
@@ -194,15 +138,51 @@ const elementosRegisterForm = [
     type: "text",
     placeHolder: "Repetir Password",
   },
+/*
+  {
+    tag: "h1",
+    id: "register-form-label-fecha-nac",
+    listaClases: ["login-form-text"],
+    listaAcciones: undefined,
+    innerText: "E-mail",
+  },
+
+  {   //Hasta que arregle lo del form renderizo un input comun y lo valido.
+    tag: "input",
+    id: "register-form-email-input",
+    listaClases: ["login-form-input"],
+    listaAcciones: undefined,
+    type: "email",
+    placeHolder: "Email",
+  },*/
 
   {
     tag: "input",
-    id: "register-form-estado-input",
+    id: "register-form-email-input",
     listaClases: ["login-form-input"],
     listaAcciones: undefined,
     type: "text",
-    placeHolder: "Estado",
+    placeHolder: "Email",
   },
+  /*
+  {
+    tag: "h1",
+    id: "register-form-label-fecha-nac",
+    listaClases: ["login-form-text"],
+    listaAcciones: undefined,
+    innerText: "Fecha de Nacimiento.",
+  },
+
+  {
+    tag: "input",
+    id: "register-form-fechanacimiento-input",
+    listaClases: ["login-form-input"],
+    listaAcciones: undefined,
+    type: "date",
+    placeHolder: "Fecha de nacimiento",
+  },
+ */
+ 
 
   {
     tag: "h1",
@@ -211,7 +191,7 @@ const elementosRegisterForm = [
     listaAcciones: undefined,
     innerText: "Url foto de perfil",
   },
-
+ /*
   {
     tag: "input",
     id: "register-form-fotoperfil-input",
@@ -219,6 +199,14 @@ const elementosRegisterForm = [
     listaAcciones: undefined,
     type: "url",
     placeHolder: "Foto de perfil",
+  },
+*/
+  {
+    tag: "img",
+    id: "register-form-perfil-img",
+    listaClases: ["selector-picperfil-container-pics"],
+    listaAcciones: undefined,
+    source: "./imagenes/icons/ico_perfil.png",
   },
 
 
