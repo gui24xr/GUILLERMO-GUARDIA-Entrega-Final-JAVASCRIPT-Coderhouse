@@ -92,12 +92,14 @@ class baseDatos {
 
     let objUsuario;
     let coincidenUserPass = false;
+
     
     if (this.existeUsuario(usuario)){ 
        objUsuario = this.getUserInfo(usuario)
-       if (objUsuario.password === password) coincidenUserPass = true
+       if (objUsuario.password === password) {coincidenUserPass = true; }
     }
 
+     
       return coincidenUserPass
 
   } 
@@ -106,7 +108,7 @@ class baseDatos {
   //getInfoUsuario = () =>[ console.log("hola")]
   getPostID = (postID)=> {
 
-    //Busca el post, cruza los datos y devuelve el array
+    //Busca el post, cruza los datos y devuelve el array con los datos del post, user y una lista de los likes nombre
     let data = this.posts;
     let postEncontrado = false; 
     let i=0;
@@ -127,10 +129,13 @@ class baseDatos {
     let datosPostIdBuscado = data[i]
     let datosUsuarioEmisorPost = this.getInfoUserID(datosPostIdBuscado.userID)
     
-
+    //console.log("aaaaaaaa",datosUsuarioEmisorPost)
+    //armo una lista con los nombres de los usuarios likeadores. 
+    let userNameLikeadores =[]
+    //console.log("likes: ", data[i].likes)
+    data[i].likes.forEach( likeUser => userNameLikeadores.push(this.getInfoUserID(likeUser).userName))
     
-    
-    return {...datosPostIdBuscado,...datosUsuarioEmisorPost}}
+    return {...datosPostIdBuscado,...datosUsuarioEmisorPost,usersLikeadores:userNameLikeadores}}
     else return false
 
 
@@ -147,7 +152,7 @@ class baseDatos {
   getAllPosts = () => {
 
     let arreglo = []
-
+    //getPostId devuelve el post pero con la info cruzada del user
     this.posts.forEach( post  => arreglo.push(this.getPostID(post.postID)))
 
     return arreglo
@@ -155,7 +160,14 @@ class baseDatos {
   
   
 
+ getAllUsers =() => {
 
+  
+ 
+  return this.usuarios
+
+
+ }
 
 
 
@@ -167,7 +179,7 @@ class baseDatos {
     if (this.existeUsuario(usuarioIngresado)){
       let usuarioBuscado = this.getUserInfo(usuarioIngresado); //ya tengo el usuario, no solo busco sus post si no datos suyos para que sean renderizados
       //const { userID, userName, fotoPerfil } = usuarioBuscado
-      delete usuarioBuscado.password //Saco el password xq no quiero que la base de datos de esa informacion, solo el resto que es renderizable
+      usuarioBuscado.password //Saco el password xq no quiero que la base de datos de esa informacion, solo el resto que es renderizable
       
       //Se que existe el usuario, obtuve sus datos y ahora busco sus post en el array de post
       //Devuelvo un array con los posts e info del usuario para no tener que cruzar datos despues
@@ -201,7 +213,7 @@ class baseDatos {
     
   if (usuarioEncontrado == true) {
     //delete data[i].password //Quito el password para proteger info
-    //console.log(data[i])
+    //console.log('objetoooooooooo: ',data[i])
     return data[i]
   }
     else return false
@@ -227,7 +239,7 @@ getInfoUserID = (idBuscado) => {
     
   if (usuarioEncontrado == true) {
     
-    delete data[i].password //Quito el password para proteger info
+    //delete data[i].password //Quito el password para proteger info
     return data[i]
   }
     else return false
@@ -256,7 +268,7 @@ let i=0;
     if (postEncontrado == true) posicionEnArrayPostID = i;
     //console.log(this.posts[i].likes)
     //Ya estoy posicionado sobre el objeto post que yo debo agregar el id del usuario que dio like.
-    console.log(this.posts[i].likes.indexOf(userID))
+    //console.log(this.posts[i].likes.indexOf(userID))
     if (this.posts[i].likes.indexOf(userID) < 0) this.posts[i].likes.push(userID)
     //else console.log("Ya esta")
     //console.log(this.posts[i].likes)
@@ -288,8 +300,10 @@ agregarNuevoUsuario(userName,password,email,urlFotoPerfil,estado){
 
   if (!this.existeUsuario(userName)){
     let nuevoUsuario = {userID:this.asignarNuevoUserID(),userName:userName,  password:password, fotoPerfil:urlFotoPerfil, email:email,estado:estado}
+    
+     //console.log("Nuevo Usuario: ", nuevoUsuario)
     this.usuarios.push(nuevoUsuario)
-    //console.log("Nuevo Usuario: ", nuevoUsuario)
+   
     //console.log(this.usuarios)
     return true;
   }

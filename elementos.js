@@ -12,22 +12,22 @@ const elementosHeaderBanner = [
 
   {
     tag: "img",
-    id: "header-banner-logo",
-    listaClases: ["headerbar-logo"],
+    id: "header-banner-icon1",
+    listaClases: ['headerbar-menu-iconos'],
     listaAcciones: undefined,
     source: "./imagenes/icons/ico_logomoto.png",
   },
   {
     tag: "img",
-    id: "header-banner-logo",
-    listaClases: ["headerbar-logo"],
+    id: "header-banner-icon2",
+    listaClases: ["headerbar-menu-iconos"],
     listaAcciones: undefined,
     source: "./imagenes/icons/ico_logomoto2.png",
   },
   {
     tag: "img",
-    id: "header-banner-logo",
-    listaClases: ["headerbar-logo"],
+    id: "header-banner-icon3",
+    listaClases: ["headerbar-menu-iconos"],
     listaAcciones: undefined,
     source: "./imagenes/icons/ico_logomoto3.png",
   },
@@ -78,7 +78,7 @@ const elementosLoginForm = [
     type: "submit",
     value: "Ingresar",
   },
-
+/*
   {
     tag: "h1",
     id: "register-form-nuevo",
@@ -89,7 +89,7 @@ const elementosLoginForm = [
                       ],
     innerText: "Registro",
   },
-
+*/
   
 
   
@@ -219,7 +219,7 @@ const elementosRegisterForm = [
     type: "submit",
     value: "Aceptar",
   },
-
+/*
   {
     tag: "h1",
     id: "register-form-atras",
@@ -229,6 +229,22 @@ const elementosRegisterForm = [
 
                       ],
     innerText: "Atras",
+  },
+*/
+ 
+];
+
+
+
+const elementosFooter = [
+  //Es el menu de la barra principal.
+
+  {
+    tag: "h1",
+    id: "id-footer-banner-title",
+    listaClases: ["footer-banner-title"],
+    listaAcciones: undefined,
+    innerText: "MOTOGRAM@Todos los derechos reservados 2023",
   },
 
  

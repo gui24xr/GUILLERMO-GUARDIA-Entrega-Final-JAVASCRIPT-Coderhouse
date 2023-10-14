@@ -25,16 +25,18 @@ const urlPicsHelmet =
 const urlPicsMotorcycle =
   "https://api.unsplash.com/search/photos?query=motorcycle&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
 
-var nuevaAlturaMainContainer;
+
 //-----------------------------------------------------------------------------------------------//
 // DECLARACION E INICIALIZICION VARIABLES GLOBALES DE INSTANCIAS
 //-----------------------------------------------------------------------------------------------//
 
+var nuevaAlturaMainContainer;
 
 //Base de datos
 var baseDatosApp = undefined; //= new baseDatos(archivoUsuarios,archivoPosts)
 conectarBaseDatos(); //Crea la BD, levanta los archivos.
 creacionDePerfilesAleatorios(); //Le agrega perfiles y posts 'falsos' para poblar la BD
+
 
 
 //En esta variable vamos a guardar el user que inicia sesion
@@ -68,11 +70,15 @@ const bannerEncabezado = new wrapperElements("id-banner-header", "headerBar", el
 bannerEncabezado.engancharEnNodo(headerContainer);
 
 // banner donde tenemos para ingresar al login form y secciones una vez la sesion se inicia.
-const bannerSesionActual = new bannerSesion("id-banner-sesion","banner-sesion", elementosBannerSesion, transformarObjetoEnNodo);
+const bannerSesionActual = new bannerSesion("id-banner-sesion","banner-sesion", transformarObjetoEnNodo);
 bannerSesionActual.engancharEnNodo(headerContainer)
 
+//En el footer solo genero un banner que quedara fijo, es solo de vista.
+const footerBanner = new wrapperElements("id-footer-element","class-footer",elementosFooter,transformarObjetoEnNodo)
+const footerContainer = document.getElementById('id-footer')
+footerBanner.engancharEnNodo(footerContainer)
 // Una vez creadas las Barras Configuro el tamaño del main container y pongo un fondo de pantalla aleatorio.
-configurarMainContainer(false);
+configurarMainContainer('home');
 selectBackgroundScreen(false);
 
 
