@@ -1,4 +1,4 @@
-class selectorPosts  {
+class PostsRender  {
 
   constructor( wrapperId, wrapperClass, wrapperData , renderFunction) {
       //ViewTipe es el tipo de visualizacion que quiero darle y tiene variois valores
