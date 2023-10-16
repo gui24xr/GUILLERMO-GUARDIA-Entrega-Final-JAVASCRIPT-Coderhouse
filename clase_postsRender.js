@@ -27,6 +27,10 @@ class PostsRender  {
 
   getCajaPostsEnteros(){
 
+    //Siempre antes de renderizar debo limpiar y pedir a la base de datos la indo actual 
+    this.limpiarContainer()
+   
+    //this.elementosMostrados = this.baseDatos.getAllPosts().reverse()
 
     //Recorre el array elementos mostrados y arma
     //cada wrapper lo tiene que enganchar al this container
@@ -91,7 +95,7 @@ class PostsRender  {
                                         tag: "img",
                                         id: "header-banner-icodn3",
                                         listaClases: ["container-un-post-container-imagen-pic"],
-                                        listaAcciones: [{evento:'dblclick',accion:()=> animacionLike(post.postID)}],
+                                        listaAcciones: [{evento:'dblclick',accion:()=> this.darLike(post.postID,usuarioLogueado)}],
                                         source: post.foto,
                                       },
                                  
@@ -109,7 +113,7 @@ class PostsRender  {
                                       tag: "img",
                                       id: "corazon"+"PostID"+post.postID,
                                       listaClases: ["container-un-post-iconos-likes"],
-                                      listaAcciones: undefined,
+                                      listaAcciones: [{evento:'click',accion:()=> this.darLike(post.postID,usuarioLogueado)}],
                                       source: "./imagenes/icons/ico_like.png",
                                     },
                                     {
@@ -254,10 +258,6 @@ renderizarUsuarioGrilla(userNameRenderizar){
    }
   
 
-irAPost(postID, userBuscado){
-  this.renderizarUsuarioLista(userBuscado)
-  location.hash = '#' + 'idPost'+ post.postID
-}
 
   
 getGrilla(){
@@ -275,7 +275,7 @@ let elementosParaRenderizar;
         tag: "img",
         id: post.postID,
       listaClases: [/*"grid-post"*/'clase-wrappers-grilla-posts-imagen'],
-      listaAcciones: [{evento:'click',accion:()=> this.irAPost(post.postID,post.userName)}, ],
+      listaAcciones: [{evento:'click',accion:()=> this.irAPostUser(post.postID,post.userName)}, ],
       source: post.foto
       }
                                   
@@ -336,7 +336,92 @@ b
 
 
 
+   
 
+ getPosicionPostIDElementosMostrados(postID){
+
+  let encontrado = false;
+ let i=0;
+ let posicionPost;
+
+  while (!encontrado && i<this.elementosMostrados.length){
+    if (this.elementosMostrados[i].postID == postID)  {
+      posicionPost= i
+      encontrado = true;
+    }
+    else i++;
+
+  }
+
+  return i
+  
+ }
+
+
+
+  darLike (postID){
+
+    //hace la animacion del like y luego setea en la BD el like, manda todo a renderizar de nuevo y posicionarse en el post donde se dio like.
+
+    let idBuscadoCorazon = 'corazonPostID' + postID
+    let corazonPost = document.getElementById(idBuscadoCorazon)
+
+    corazonPost.classList.add('container-un-post-container-imagen-animacion')
+    corazonPost.src = "./imagenes/icons/ico_likeclick.png"
+
+    setTimeout( ()=> { 
+  
+        corazonPost.classList.remove('container-un-post-container-imagen-animacion')
+        corazonPost.src = "./imagenes/icons/ico_like.png"
+
+        //Hasta aca la animacion, ahora la accion de la BD.
+        this.baseDatos.setLikes(postID,this.userLogueado)
+    
+        /*AHora tengo que actualizar en mi elementosMostrados el post para no volver a pedir a la BD toda la data 
+        Esto es para actualizar el post likeado provisorio, luego al mostrar toda la BD*/
+        //Le piudo a la BD solo ese post y lo reemnpazp en elementos mostrados
+        let postActualizado = this.baseDatos.getPostID(postID)
+        console.log("post actual: ",postActualizado)
+        let posicionElementos = this.getPosicionPostIDElementosMostrados(postID)
+        this.elementosMostrados[posicionElementos] = postActualizado
+
+            //Renderizo todo de nuevo para mostrar con el nuevo like
+            this.getCajaPostsEnteros()
+            this.irAPost(postID)
+
+    
+},1000)
+
+  }
+  
+
+
+
+
+
+  
+  cambiarPostActual(idPostNuevo){
+
+    //Tomo un post de la base de datos
+  
+    let unPost = this.baseDatos.getPostID(idPostNuevo)//baseDatosApp.getPostsUsuario(usuarioLogueado)
+     this.irAPost(unPost)
+     this.cambiarPosicion('f')
+  }
+  
+
+ //Este metodo me lleva a un post en particular si esta renderizado.
+  irAPost(postID){
+ 
+    location.hash = '#' + 'idPost'+ postID
+  }
+  
+  //Este metodo primero renderiza la lista de un usuario y luego me dirige a un post
+  irAPostUser(postID, userBuscado){
+    this.renderizarUsuarioLista(userBuscado)
+    location.hash = '#' + 'idPost'+ postID
+  }
+  
 
 
 

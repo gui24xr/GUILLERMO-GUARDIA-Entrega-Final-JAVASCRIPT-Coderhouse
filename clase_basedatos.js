@@ -248,6 +248,10 @@ getInfoUserID = (idBuscado) => {
 
 setLikes(postID,usuarioLikeador){
 
+
+console.log(postID,usuarioLikeador)
+
+
 let infoUserLikeador = this.getUserInfo(usuarioLikeador)
 const {userID} = infoUserLikeador
 //Agrego el userID a la lista de likes del post que me pasan por parametro.
@@ -271,7 +275,7 @@ let i=0;
     //console.log(this.posts[i].likes.indexOf(userID))
     if (this.posts[i].likes.indexOf(userID) < 0) this.posts[i].likes.push(userID)
     //else console.log("Ya esta")
-    //console.log(this.posts[i].likes)
+    console.log('likes:'+ this.posts[i].likes)
 
 
 }
