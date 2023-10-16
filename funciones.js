@@ -140,8 +140,10 @@ function abrirSesionUsuario(usuario){
   usuarioLogueado = usuario
   //console.log(usuarioLogueado)
   //Doy la bienvenida y quita de la visualizacion los componentes de form
-  alert('Se logueo el usuario: ' + usuario)  //Usar sweet alert.
-  mainFormLogin.desengancharDeDom()
+
+  mostrarMensaje('Se logueo el usuario: ' + usuario + '!!','success','Aceptar')
+  
+  //mainFormLogin.desengancharDeDom()
   
   let { userName:nombreUsuario, fotoPerfil} = baseDatosApp.getUserInfo(usuarioLogueado)
   //Abro los banners de sesion iniciada.
@@ -188,52 +190,40 @@ function comprobarRegistroUsuario(){
   const emailIngresado = document.getElementById('register-form-email-input').value 
   const fotoPerfilIngresada = document.getElementById('register-form-perfil-img').src
 
-  //Existe usuario?
-  let condicion1 = !baseDatosApp.existeUsuario(usernameIngresado)
-  let condicion2 = baseDatosApp.passwordAceptado(passwordIngresado) 
-  let condicion3 = passwordIngresado == passwordRepeatIngresado 
-  let condicion4 = esEmailValido(emailIngresado)
+  //Condiciones
+  let condicion1 = !baseDatosApp.existeUsuario(usernameIngresado) //Existe usuario?
+  let condicion2 = baseDatosApp.passwordAceptado(passwordIngresado) //Es un password valido??
+  let condicion3 = passwordIngresado == passwordRepeatIngresado  //Coinciden los passwords ingresados?
+  let condicion4 = esEmailValido(emailIngresado) //Es un email valido el ingresado?
 
   //Si todas estas condiciones proceso a crear el usuario, si no emito un mensaje de error.
   if (condicion1 && condicion2 && condicion3 && condicion4){
 
     //Si lo creo de forma satisfactoria aviso mando a iniciar sesion
-    console.log(fotoPerfilIngresada.source)
-    if (baseDatosApp.agregarNuevoUsuario(usernameIngresado,passwordIngresado,emailIngresado,fotoPerfilIngresada)) {
-      alert("todo ok")
+      if (baseDatosApp.agregarNuevoUsuario(usernameIngresado,passwordIngresado,emailIngresado,fotoPerfilIngresada)) {
+      mostrarMensaje('El usuario ' + usernameIngresado + ' se registro exitosamente, ya podes iniciar sesion !!','success','Aceptar')
+      //Vamos a crear un postInicial de bienvenida para cada nuevo user que le diga que haga su primer posteo con los sigeintes datos..
+           
+      baseDatosApp.agregarNuevoPost(baseDatosApp.getUserInfo(usernameIngresado).userID,getFechaActual().fechaActualString,getFechaActual().horaActualString,'Bienvenido a Motogram ' + usernameIngresado + 'subi tu primer foto !',PICPOSTBIENVENIDA)
+      
       desrenderizarScreenActual();
       renderizarScreenLogin()
     }
   }
   else{
-    alert("mensaje de error con switch")
+        
+    //Decido que mensaje de errpr dar segun lo que suceda. Mensaje de error es sumatoria
+
+
+    if (!condicion1) mostrarMensaje('El usuario ' + usernameIngresado + ' ya existe!!','warning','Aceptar')
+    if (!condicion2) mostrarMensaje('La contraseña ingresada no es seguro ! Utilice al menos 6 letras y solamente numeros y letras !!','warning','Aceptar')
+    if (!condicion3) mostrarMensaje('Las contraseñas ingresadas no coinciden !!','warning','Aceptar')
+    if (!condicion4) mostrarMensaje('El email ingresado no es un email valido !!','warning','aceptar')
+  
+
   }
 
 }
-
-
-function renderizarSolapaOtrosMoteros(){
-/*
-
- configurarMainContainer('otros-moteros')
- let todosLosPosts = baseDatosApp.getAllPosts()
-  
- 
-  selectorViewerGeneralTipoPosts = new selectorPosts('id-selector-Posts-general2','un-container',todosLosPosts,postViewerGeneral,transformarObjetoEnNodo,'posts')
-selectorViewerGeneralTipoPosts.engancharEnNodo(mainContainer)
-  //selectorViewerGeneral2.engancharEnNodo(mainContainer)
-  //selectorViewerGeneral3.engancharEnNodo(mainContainer)
-  //postViewerGeneral.engancharEnNodo(mainContainer)
-  //postViewerGeneral.containerPostInfo.engancharEnNodo(mainContainer)
-
-  //postViewerGeneral.engancharEnNodo(pagina)
-  //postViewerGeneral.containerPostInfo.engancharEnNodo(mainContainer)
-  //postViewerGeneral.containerPostPic.engancharEnNodo(mainContainer)
-  
-*/
-
-}
-
 
 function darLike(postIDClickeado){
 
@@ -445,4 +435,34 @@ setTimeout( ()=> {
 
     
 
+  }
+
+
+  function mostrarMensaje (mensajeMostrado,iconoMostrado,mensajeBotonConfirmar){
+
+    Swal.fire({
+      title: mensajeMostrado,
+      icon: iconoMostrado,
+      confirmButtonText: mensajeBotonConfirmar
+
+    }
+    
+    )
+
+  }
+
+
+  function getFechaActual(){
+
+    //Devuelve un objeto que tiene 2 propiedades que son string fecha y hora pero con el formato de la base de datos.
+    /*console.log(DateTime.now())*/
+
+    //Obtengo el objeto con la hora actual
+    const { year,month,day,hour,minute } = DateTime.now().c
+
+    //Devuelvo un objeto con 2 propiedades ( fechaActualString y horaActualString) que son la fecha y hóra actual en formato deseado.
+
+    return { fechaActualString: day+'-'+month+'-'+year, horaActualString: hour+':'+minute}
+
+   
   }
