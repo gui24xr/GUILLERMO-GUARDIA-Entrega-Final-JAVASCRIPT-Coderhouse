@@ -2,16 +2,17 @@ const PICPOSTBIENVENIDA = '../imagenes/postbienvenida.jpg'
 const DateTime = luxon.DateTime
 
 //ESTE OBJETO VA A REPRESENTAR MI HORA ACTUAL PARA HACER CALCULOS Y PONER EN POSTS
-const objetoTiempo = {diaActual:DateTime.now().day,
+/*const objetoTiempo = {diaActual:DateTime.now().day,
                       mesActual:DateTime.now().month,
                       anioActual:DateTime.now().year,
                       horaActual:DateTime.now().hour,
                       minutesActual:DateTime.now().minute,
 
-}
+}*/
+
+console.log(getFechaAleatoria())
 
 
-console.log(getFechaActual())
 
 //-----------------------------------------------------------------------------------------------//
 // CATEGORIAS

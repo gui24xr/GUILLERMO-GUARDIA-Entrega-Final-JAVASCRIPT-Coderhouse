@@ -204,7 +204,7 @@ function comprobarRegistroUsuario(){
       mostrarMensaje('El usuario ' + usernameIngresado + ' se registro exitosamente, ya podes iniciar sesion !!','success','Aceptar')
       //Vamos a crear un postInicial de bienvenida para cada nuevo user que le diga que haga su primer posteo con los sigeintes datos..
            
-      baseDatosApp.agregarNuevoPost(baseDatosApp.getUserInfo(usernameIngresado).userID,getFechaActual().fechaActualString,getFechaActual().horaActualString,'Bienvenido a Motogram ' + usernameIngresado + 'subi tu primer foto !',PICPOSTBIENVENIDA)
+      baseDatosApp.agregarNuevoPost(baseDatosApp.getUserInfo(usernameIngresado).userID,getFechaActual().fechaString,getFechaActual().horaString,'Bienvenido a Motogram ' + usernameIngresado + 'subi tu primer foto !',PICPOSTBIENVENIDA)
       
       desrenderizarScreenActual();
       renderizarScreenLogin()
@@ -377,11 +377,13 @@ function creacionDePerfilesAleatorios() {
         data.forEach((registro) => {
         //COn esta los creamos y sabemos si esa creacion fue satisfactoria.
         if (baseDatosApp.agregarNuevoUsuario(registro.username,registro.password,registro.email,registro.avatar, "Hola, soy " + registro.username) == true){
-          //Vamos a crear por cada usuario nuevo entre 1 y 10 posts con fotos de unplash y categoria al azar respecto a la tematica del sitio.
+          //Vamos a crear por cada usuario nuevo entre 1 y 6 posts con fotos de unplash y categoria al azar respecto a la tematica del sitio.
           
-          let cantidadNuevosPost = generarValorAleatorio(1, 4);
-          let horaPost = "09:30"; //Despues genero esto de manera aleatorio
-          let fechaPost = "6-10-23"; //Despues genero esto de manera aleatorio
+          
+        
+          let cantidadNuevosPost = generarValorAleatorio(1, 6);
+          
+          
           let texto = "Este post es de" + registro.username; //Despues lo generamos aleatorio.
           let categoria = getDatoAleatoriaArray(categoriasImagenes); //console.log("Catego: ", categoria)
           //Le pido la cantidad deseada a unplas y por cada imagen creo un post
@@ -390,7 +392,12 @@ function creacionDePerfilesAleatorios() {
             .then((data) => {
               //tenemos un array con la cantidad pedida de objetos, lo recorro y voy creando posts para este user
               let idUsuarioActual = baseDatosApp.getUserInfo(registro.username).userID
-              data.results.forEach((x) => { baseDatosApp.agregarNuevoPost(idUsuarioActual,fechaPost,horaPost,texto,x.urls.regular);});
+              data.results.forEach((x) => { 
+                
+                let fechaHora = getFechaAleatoria()
+                let horaPost = fechaHora.horaString
+          let fechaPost = fechaHora.fechaString
+                baseDatosApp.agregarNuevoPost(idUsuarioActual,fechaPost,horaPost,texto,x.urls.regular);});
               //console.log("wwwwwwwwwwwwww",baseDatosApp.getPostsUsuario('20'))
               //console.log("BASE DE DATOS: \n",baseDatosApp.getAllPosts())
             });
@@ -455,14 +462,46 @@ setTimeout( ()=> {
   function getFechaActual(){
 
     //Devuelve un objeto que tiene 2 propiedades que son string fecha y hora pero con el formato de la base de datos.
-    /*console.log(DateTime.now())*/
+   
 
     //Obtengo el objeto con la hora actual
-    const { year,month,day,hour,minute } = DateTime.now().c
+    let { year,month,day,hour,minute } = DateTime.now().c
 
     //Devuelvo un objeto con 2 propiedades ( fechaActualString y horaActualString) que son la fecha y hóra actual en formato deseado.
 
-    return { fechaActualString: day+'-'+month+'-'+year, horaActualString: hour+':'+minute}
+    if (month < 10) month = '0' + month
+    if (day < 10) day = '0' + day
+    if (hour < 10) hour = '0' + hour
+    if (minute < 10) minute = '0' + minute
+
+    return { fechaString: day+'-'+month+'-'+year, horaString: hour+':'+minute}
 
    
+  }
+
+
+  function getFechaAleatoria(){
+
+    //Devuelve un objeto con una fecha y hora aleatorias y 5 año anteriores que tiene 2 propiedades que son string fecha y hora pero con el formato de la base de datos.
+ 
+       
+        /* Trabajo con el metodo plus */
+        /*Genero una cantidad aleatoria de dias y minutos para restar que sea entre 0 y 5 años (0 y 1825 dias)
+        lo multiplico * -1  para que el metodo plus reste*/
+
+        let cantDiasRestar = generarValorAleatorio(1,1825) * -1
+        let cantMinutos = generarValorAleatorio(1,1439)*-1
+        let nuevaFechaHoraAleatoria = DateTime.now().plus({days:cantDiasRestar,minutes:cantMinutos})
+       
+        //Deconstructuro el resultado para trabajar mas comdoo en la sintaxis.
+        let { year,month,day,hour,minute } = nuevaFechaHoraAleatoria.c
+        //Para que no me quede formato 6:6 x ejemplo en vez de 6.6 agrego un cero
+       if (month < 10) month = '0' + month
+       if (day < 10) day = '0' + day
+       if (hour < 10) hour = '0' + hour
+       if (minute < 10) minute = '0' + minute
+      
+      //Devuelvo el objeto con el formato deseado.
+      return { fechaString: day+'-'+month+'-'+year, horaString: hour+':'+minute}
+    
   }

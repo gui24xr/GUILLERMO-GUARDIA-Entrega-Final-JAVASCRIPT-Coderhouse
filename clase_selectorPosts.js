@@ -147,6 +147,20 @@ class selectorPosts  {
                                       listaAcciones: undefined,
                                       innerText: post.texto
                                     },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-hora",
+                                      listaClases: ["container-un-post-texto"],
+                                      listaAcciones: [{evento:'click',accion:()=>'Funcionalidad aun no implementada !'}],
+                                      innerText: 'Agregar un comentario...'
+                                    },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-hora",
+                                      listaClases: ["container-un-post-texto"],
+                                      listaAcciones: [],
+                                      innerText: post.fecha +' '+ post.hora
+                                    },
                                     ]
                                   },
 
