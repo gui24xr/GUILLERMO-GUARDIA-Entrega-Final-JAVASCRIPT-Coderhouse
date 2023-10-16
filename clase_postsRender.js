@@ -1,18 +1,21 @@
 class PostsRender  {
 
-  constructor( wrapperId, wrapperClass, wrapperData , renderFunction) {
+  constructor( wrapperId, wrapperClass, renderFunction, baseDatos,userLogueado) {
       //ViewTipe es el tipo de visualizacion que quiero darle y tiene variois valores
     //Post Viewer es el post que va a manejar este selector
     //console.log("Selector Posts.");
+    this.baseDatos = baseDatos
+    this.userLogueado = userLogueado
     this.container = document.createElement("div");
     this.container.id = wrapperId; //La utilizo para manejarme
     this.container.className = wrapperClass;
     this.container.className = 'un-container' //CLASE CUANDO MUESTRA POSTS
-    this.wrapperData = wrapperData;
+    this.dataARenderizar = this.baseDatos.getAllPosts()
     this.contador = 0; /// Para el carrusel.
-    this.elementosMostrados = this.wrapperData.reverse()  //Recibe un array de posts, lo procesa y lo muestra y l,o invierte xq se supone los post no vienen en orden inversoi.
-    
+    this.elementosMostrados = this.dataARenderizar.reverse()  //Recibe un array de posts, lo procesa y lo muestra y l,o invierte xq se supone los post no vienen en orden inversoi.
+                                                          /* Pero esto es provisorio hasta construir el metodo que ordena por fecha y hora los objetos del array"*/
     this.renderFunction = renderFunction
+
    
   
 
@@ -210,11 +213,11 @@ this.container.className = 'un-container' //CLASE CUANDO MUESTRA POSTS
 
 filtrarDatos(userNameBuscado){
 
-//Toma el array this.wrapperData, lo recorre y arma uno nuevo con solo los post/datos del user fitrado.
+//Toma el array this.dataARenderizar, lo recorre y arma uno nuevo con solo los post/datos del user fitrado.
 
 this.elementosMostrados = [] //Lo vacio al elementosMostrados para luego volver a llenarlo.
 
-this.wrapperData.forEach ( post =>{ if (post.userName == userNameBuscado) this.elementosMostrados.push(post)})
+this.dataARenderizar.forEach ( post =>{ if (post.userName == userNameBuscado) this.elementosMostrados.push(post)})
 //console.log("Filtrado: ", this.elementosMostrados)
 
 

@@ -103,7 +103,7 @@ function renderizarScreenUsuarioLogueado(){
 //Inicia mostrando todos los posts de la red igual que instagram, ahora como no hay amigos muestra
 configurarMainContainer('instagram')
  let todosLosPosts = baseDatosApp.getAllPosts()
-  postRender1 = new PostsRender('id-selector-Posts-general2','un-container',todosLosPosts,transformarObjetoEnNodo)
+  postRender1 = new PostsRender('id-selector-Posts-general2','un-container',transformarObjetoEnNodo,baseDatosApp,usuarioLogueado)
  postRender1.engancharEnNodo(mainContainer)
 
 
