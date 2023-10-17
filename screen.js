@@ -37,6 +37,9 @@ function configurarMainContainer(configuracion){
            
             mainContainer.className = 'clase-main-container-screen-galeria'
          break;
+         case 'nuevoPost':
+          mainContainer.className = 'clase-main-container-screen-registro'
+       break;
 
 
 
@@ -130,7 +133,7 @@ function renderizarGaleria(){
                                                                 { tag: "img",
                                                                   id: 'imggaleria',
                                                                   listaClases: ["grid-post-select-pic"],
-                                                                  listaAcciones: undefined,
+                                                                  listaAcciones: [{evento: 'click', accion: (e)=> renderizarFormularioNuevoPost(e.target)}],
                                                                   source: x.urls.small
                                                                 },
                                                                 ]
@@ -144,4 +147,94 @@ function renderizarGaleria(){
                                         })
   
                                 
+  }
+
+
+
+
+
+  function crearNuevoPost(){
+
+    //El formulario esta engnchado al main container entonces podemos tomar el value ingresado.
+    let textoNuevoPost = document.getElementById('nuevo-post-form-text-input').value
+    let imagenNuevoPost = document.getElementById('nuevo-post-form-imagen-elegida').src
+
+    //Busco el ID del usuario logueado y la fecha actual para crear el post
+    let userIDNuevoPost = baseDatosApp.getUserInfo(usuarioLogueado).userID
+    let fechaHoraNuevoPost = getFechaActual()
+
+    //console.log(textoNuevoPost,'\n',imagenNuevoPost,'\n',userIDNuevoPost,'\n',fechaHoraNuevoPost)
+   baseDatosApp.agregarNuevoPost(userIDNuevoPost,fechaHoraNuevoPost.fechaString,fechaHoraNuevoPost.horaString,textoNuevoPost,imagenNuevoPost)
+
+   //Se creo el nuevo Post, ahora tengo que ir a mostrarlo.
+   mostrarMensaje(usuarioLogueado + ' creaste un nuevo posteo !!!','success','Aceptar')
+
+  }
+
+
+
+  function renderizarFormularioNuevoPost(e){
+
+    //Configuro main container.
+    configurarMainContainer('nuevoPost')
+
+    //Extraigo la imagen del e.target
+    let srcImagenElegida = e.src
+
+    //Creo los elementos del form con la imagen elegida
+    let elementosNuevoPostForm = [
+      {
+        tag: "h1",
+        id: "login-form-title",
+        listaClases: ["login-form-text"],
+        listaAcciones: undefined,
+        innerText: "NUEVO POST",
+      },
+    
+      {
+        tag: "img",
+        id: "nuevo-post-form-imagen-elegida",
+        listaClases: ["headerbar-menu-iconos"],
+        listaAcciones: undefined,
+        source: e.src,
+      },
+    
+      {
+        tag: "input",
+        id: "nuevo-post-form-text-input",
+        listaClases: ["login-form-input"],
+        listaAcciones: undefined,
+        type: "text",
+        placeHolder: "Usuario",
+      },
+    
+    
+      {
+        tag: "input",
+        id: "login-form-submit-input",
+        listaClases: ["login-form-button"],
+        listaAcciones: undefined,
+        type: "submit",
+        value: "Aceptar",
+      },
+    ];
+
+
+    //let textoIngresado = document.getElementById('nuevoPost-form-text-input').value
+    //console.log(textoIngresado)
+    //Creo el form
+    
+    nuevoPostForm = new wrapperElements("id-register-form","login-form",elementosNuevoPostForm, transformarObjetoEnNodo, "javascript:crearNuevoPost()");
+    
+    
+    
+    nuevoPostForm.engancharEnNodo(mainContainer)
+
+   
+    //Configuro el main y desrendeizo
+    
+  
+ 
+
+
   }

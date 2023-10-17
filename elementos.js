@@ -78,24 +78,8 @@ const elementosLoginForm = [
     type: "submit",
     value: "Ingresar",
   },
-/*
-  {
-    tag: "h1",
-    id: "register-form-nuevo",
-    listaClases: ["login-form-text"],
-    listaAcciones: [{evento:'mousemove',accion:()=>document.getElementById('register-form-nuevo').classList.toggle('login-form-text-grande')},
-    {evento:'click',accion:()=>{desrenderizarScreenActual(),renderizarScreenRegistro()}},
-
-                      ],
-    innerText: "Registro",
-  },
-*/
-  
-
-  
 ];
 
-//Items
 
 
 
@@ -249,3 +233,9 @@ const elementosFooter = [
 
  
 ];
+
+
+
+
+
+

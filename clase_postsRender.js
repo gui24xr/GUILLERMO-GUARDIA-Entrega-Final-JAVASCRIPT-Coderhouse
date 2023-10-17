@@ -44,6 +44,8 @@ class PostsRender  {
      //Sabemos cuantos likes tiene cada post entonces...
      //console.log("Likeadores: ", post.usersLikeadores)
      let leyendaLikes = post.usersLikeadores.length > 0 ? 'Le gusta a ' + post.usersLikeadores : "Aun no tienes likes !!!"
+     let leyendaTiempoTranscurrido = getLeyendaTiempoTranscurrido(post.fecha,post.hora)
+     console.log('P: ',post.fecha , '    ',post.hora)
 
      
     elementosParaRenderizar= [                        
@@ -166,7 +168,7 @@ class PostsRender  {
                                       id: "id-postviewer-div-head-hora",
                                       listaClases: ["container-un-post-texto"],
                                       listaAcciones: [],
-                                      innerText: post.fecha +' '+ post.hora
+                                      innerText: leyendaTiempoTranscurrido //post.fecha +' '+ post.hora
                                     },
                                     ]
                                   },

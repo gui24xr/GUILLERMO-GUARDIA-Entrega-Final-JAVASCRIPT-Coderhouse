@@ -1,3 +1,5 @@
+
+
 const PICPOSTBIENVENIDA = '../imagenes/postbienvenida.jpg'
 const DateTime = luxon.DateTime
 
@@ -10,7 +12,7 @@ const DateTime = luxon.DateTime
 
 }*/
 
-console.log(getFechaAleatoria())
+console.log(getLeyendaTiempoTranscurrido('05-07-2014','10:23'))
 
 
 
@@ -73,6 +75,7 @@ var mainFormLogin = new wrapperElements("id-main-login-form","login-form", eleme
 //Formulario de registro de nuevos usuario y eleccion de foto de perfil 
 const registerForm = new wrapperElements("id-register-form","login-form",elementosRegisterForm, transformarObjetoEnNodo, "javascript:comprobarRegistroUsuario()");
 
+var nuevoPostForm;
 var bannerSolapas;
 var postUserViewer;
 var selectorPostViewer;

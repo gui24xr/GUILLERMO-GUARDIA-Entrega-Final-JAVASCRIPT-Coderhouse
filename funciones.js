@@ -115,6 +115,8 @@ configurarMainContainer('instagram')
 
 
 
+
+
 function comprobarUsuario (){
     
   //Capturo usuario y contraseña ingresados por el usuario. 
@@ -168,14 +170,6 @@ function cerrarSesionUsuario (){
 }
 
 
-function cambiarPostActual(unPostViewer,idPostNuevo){
-
-  //Tomo un post de la base de datos
-
-  let unPost = baseDatosApp.getPostID(idPostNuevo)//baseDatosApp.getPostsUsuario(usuarioLogueado)
-   unPostViewer.cambiarPost(unPost)
-   unPostViewer.cambiarPosicion('f')
-}
 
 
 
@@ -223,23 +217,6 @@ function comprobarRegistroUsuario(){
 
   }
 
-}
-
-function darLike(postIDClickeado){
-
-  //Postviewer pone marcas al cambiar de post y me pasa el parametr postIDclikeado 
-  //entonces le doy like al post y el like es el ID user.
-  //Quien da like es el user logueado siempre y cuando no haya loqueado.
-  //luego de eso actualizo la cantidad de likes
-
-  //setLikes(postID,usuario)    (postIDClikeado,usuarioLogueado)
-  baseDatosApp.setLikes(postIDClickeado,usuarioLogueado)
-  //Actualizo los MG renderizando de nuevo el postViewer
-  //COmo se el Id del post que me mando el lik puedo usarlo para actualizarlo.
-  
-  
-  cambiarPostActual(postUserViewer,postIDClickeado)
-  cambiarPostActual(postViewerGeneral,postIDClickeado)
 }
 
 
@@ -419,7 +396,7 @@ function creacionDePerfilesAleatorios() {
    if (condiciones.test(email)) return true; return false // El email es válido.
   }
 
-
+/*
 
   function animacionLike (postID){
 
@@ -433,7 +410,8 @@ function creacionDePerfilesAleatorios() {
     //console.log(corazonPost)
     corazonPost.classList.add('container-un-post-container-imagen-animacion')
     corazonPost.src = "./imagenes/icons/ico_likeclick.png"
-setTimeout( ()=> { 
+
+    setTimeout( ()=> { 
   
   corazonPost.classList.remove('container-un-post-container-imagen-animacion')
   
@@ -443,7 +421,7 @@ setTimeout( ()=> {
     
 
   }
-
+*/
 
   function mostrarMensaje (mensajeMostrado,iconoMostrado,mensajeBotonConfirmar){
 
@@ -457,6 +435,11 @@ setTimeout( ()=> {
     )
 
   }
+
+
+  //-----------------------------------------------------------------------------------------------//
+// FUNCIONES DE TIEMPO 
+//-----------------------------------------------------------------------------------------------//
 
 
   function getFechaActual(){
@@ -505,3 +488,88 @@ setTimeout( ()=> {
       return { fechaString: day+'-'+month+'-'+year, horaString: hour+':'+minute}
     
   }
+
+
+
+
+
+
+
+function getMinutosTranscurrido(fechaIngresada,horaIngresada){
+
+//Devuelve la cantidad de minutos transcurridos desde la fecha y hora ingresada
+
+//Tenemos en la BD formato '01-01-2023' y '09:34' por lo tanto:
+let numDia= fechaIngresada.slice(0,2)
+let numMes = fechaIngresada.slice(3,5)
+let numAnio = fechaIngresada.slice(6,10)
+let numHora = horaIngresada.slice(0,2)
+let numMins = horaIngresada.slice(3,5)
+
+//Formo la cadena para pasarle al metodo fromISO
+let fechaHoraIngresadaFormatoISO = numAnio+'-'+numMes+'-'+numDia+'T'+numHora+':'+numMins
+
+
+//Obtengo la fecha y hora actual y formo la cadena para el metodo fromISO
+let { year,month,day,hour,minute } = DateTime.now().c
+
+       if (month < 10) month = '0' + month
+       if (day < 10) day = '0' + day
+       if (hour < 10) hour = '0' + hour
+       if (minute < 10) minute = '0' + minute
+
+let fechaHoraActualFormatoISO = year+'-'+month+'-'+day+'T'+hour+':'+minute
+
+
+//Ahora conta Date.Time.iso obtengo la diferencia horaria en milisegundos y la divido para obtenerlo en minutos.
+const horaInicio = DateTime.fromISO(fechaHoraIngresadaFormatoISO)/1000/60
+const horaFin = DateTime.fromISO(fechaHoraActualFormatoISO)/1000/60
+
+return horaFin-horaInicio
+
+}
+
+function getLeyendaTiempoTranscurrido(fechaIngresada,horaIngresada){
+
+
+
+  /*Toma fecha y hora ingresadas extraidas de la BD y devuelve una leyenda como instagram depende el 
+  tiempo transcurrido */
+ let minutosTranscurridos = getMinutosTranscurrido(fechaIngresada,horaIngresada)
+ console.log("Minutos transcurridos: ", minutosTranscurridos)
+
+//Entre 1 y 10 minutos
+ if (minutosTranscurridos>=0 && minutosTranscurridos<=10) return 'Hace un momento.'
+ 
+ //Entre 11 y 59 minutos
+ if (minutosTranscurridos>10 && minutosTranscurridos<=59) return 'Hace ' + minutosTranscurridos + ' minutos'
+
+ //Entre 1 y 2 horas
+ if (minutosTranscurridos>59 && minutosTranscurridos<=119) return 'Hace ' + (minutosTranscurridos/60).toFixed(0) + ' hora.'
+  
+ //Entre 2 y 23 horas
+ if (minutosTranscurridos>=120 && minutosTranscurridos<=1439) return 'Hace ' + (minutosTranscurridos/60).toFixed(0) + ' horas'
+
+////Entre 1 dia y una semana
+ if (minutosTranscurridos>=1440 && minutosTranscurridos<=10080) return 'Hace ' + (minutosTranscurridos/60/24).toFixed(0) + ' dias'
+
+ ////Entre una semana 4 semanas
+ if (minutosTranscurridos>=10080 && minutosTranscurridos<=40319) return 'Hace ' + (minutosTranscurridos/60/24/7).toFixed(0) + ' Semanas'
+// Entre 4 semanas y 12 meses y pedimos el nombre del mes
+if (minutosTranscurridos>=40320 && minutosTranscurridos<=525600) return + fechaIngresada.slice(0,2) + ' de ' + getNombreMes(fechaIngresada.slice(3,5)) 
+
+////Un Año o mas
+if (minutosTranscurridos>=525600) return + fechaIngresada.slice(0,2) + ' de ' + getNombreMes(fechaIngresada.slice(3,5)) + ' de ' + fechaIngresada.slice(6,10)
+}
+
+
+function getNombreMes(numMes){
+
+  const nombreMeses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio', 'Agosto', 'Septiembre', 'Octubre','Noviembre','Diciembre'];
+
+  if (numMes[0] == '0') numMes = numMes[1]
+  return nombreMeses[numMes-1]
+
+  //Recibe un numero de mes, si es '05' le quita el cero y devuelve el nombre de mes
+}
+
