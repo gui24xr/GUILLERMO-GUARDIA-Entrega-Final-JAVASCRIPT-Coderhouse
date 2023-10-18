@@ -83,11 +83,13 @@ let archivoPosts;
                     fetch('./data/datos_posts.json')
                     .then( response => response.json())
                     .then( (dataArchivoPosts) => {
-                              archivoPosts = dataArchivoPosts ;
+                              archivoPosts = dataArchivoPosts;
                              //Ya tengo ambos archivos, Ahora puedo crear la base de datos y vincularla a mi variable.
                               baseDatosApp = new baseDatos(archivoUsuarios,archivoPosts)
-
-                             
+                              //Ahora le agrego perfiles mediante API
+                              creacionDePerfilesAleatorios(); //Le agrega perfiles y posts 'falsos' para poblar la BD
+                              
+                              
                       })
                     })
 
@@ -96,19 +98,6 @@ let archivoPosts;
 
 
 
-
-
-function renderizarScreenUsuarioLogueado(){
-
-//Inicia mostrando todos los posts de la red igual que instagram, ahora como no hay amigos muestra
-configurarMainContainer('instagram')
- let todosLosPosts = baseDatosApp.getAllPosts()
-  postRender1 = new PostsRender('id-selector-Posts-general2','un-container',transformarObjetoEnNodo,baseDatosApp,usuarioLogueado)
- postRender1.engancharEnNodo(mainContainer)
-
-
-
-}
 
 
 
@@ -136,21 +125,20 @@ function comprobarUsuario (){
 
 function abrirSesionUsuario(usuario){
 
-  //selectBackgroundScreen(true)
- // configurarMainContainer(true)
-  //Seteo la variable global con el nombre de usuario que se logueo y usare para todi
   usuarioLogueado = usuario
-  //console.log(usuarioLogueado)
-  //Doy la bienvenida y quita de la visualizacion los componentes de form
 
   mostrarMensaje('Se logueo el usuario: ' + usuario + '!!','success','Aceptar')
-  
-  //mainFormLogin.desengancharDeDom()
   
   let { userName:nombreUsuario, fotoPerfil} = baseDatosApp.getUserInfo(usuarioLogueado)
   //Abro los banners de sesion iniciada.
   bannerSesionActual.iniciarSesion(nombreUsuario,fotoPerfil)
-    renderizarScreenUsuarioLogueado()
+
+  /*Aprovecho aca por cuestiones de asincronia a meter los comentarios nuevos ya que en este momento se crearon todos los perfiles aleatorios y 
+  de esta manera les puedo asignar estos comentarios aleatorios y reparto 250 comentarios entre los user genuinos y aleatorios creados x la api */
+  baseDatosApp.setArchivoComentarios(getArchivoComentarios(250,baseDatosApp))
+ 
+  //Renderizo screen
+  renderizarScreenUsuarioLogueado()
   
 
 
@@ -373,14 +361,18 @@ function creacionDePerfilesAleatorios() {
                 
                 let fechaHora = getFechaAleatoria()
                 let horaPost = fechaHora.horaString
-          let fechaPost = fechaHora.fechaString
-                baseDatosApp.agregarNuevoPost(idUsuarioActual,fechaPost,horaPost,texto,x.urls.regular);});
+                let fechaPost = fechaHora.fechaString
+                let hashtagLists =getHashTagsList(generarValorAleatorio(1,8))//Entre 1 y 8 hashtags a cada post creado
+
+                baseDatosApp.agregarNuevoPost(idUsuarioActual,fechaPost,horaPost,texto,hashtagLists,x.urls.regular);});
               //console.log("wwwwwwwwwwwwww",baseDatosApp.getPostsUsuario('20'))
               //console.log("BASE DE DATOS: \n",baseDatosApp.getAllPosts())
             });
+            
+
         }
       });
-
+      
       
     })
     
@@ -396,32 +388,6 @@ function creacionDePerfilesAleatorios() {
    if (condiciones.test(email)) return true; return false // El email es válido.
   }
 
-/*
-
-  function animacionLike (postID){
-
-    //alert("like" + postID)
-
-    let idBuscadoCorazon = 'corazonPostID' + postID
-    //let idBuscadoMotito = 'corazonPostID' + postID
-    let corazonPost = document.getElementById(idBuscadoCorazon)
-    //let motitoPost = document.getElementById(idBuscadoMotito)
-    //Lo busque para darle la clase que quiero.
-    //console.log(corazonPost)
-    corazonPost.classList.add('container-un-post-container-imagen-animacion')
-    corazonPost.src = "./imagenes/icons/ico_likeclick.png"
-
-    setTimeout( ()=> { 
-  
-  corazonPost.classList.remove('container-un-post-container-imagen-animacion')
-  
-  corazonPost.src = "./imagenes/icons/ico_like.png"
-},1000)
-
-    
-
-  }
-*/
 
   function mostrarMensaje (mensajeMostrado,iconoMostrado,mensajeBotonConfirmar){
 
@@ -536,7 +502,7 @@ function getLeyendaTiempoTranscurrido(fechaIngresada,horaIngresada){
   /*Toma fecha y hora ingresadas extraidas de la BD y devuelve una leyenda como instagram depende el 
   tiempo transcurrido */
  let minutosTranscurridos = getMinutosTranscurrido(fechaIngresada,horaIngresada)
- console.log("Minutos transcurridos: ", minutosTranscurridos)
+ //console.log("Minutos transcurridos: ", minutosTranscurridos)
 
 //Entre 1 y 10 minutos
  if (minutosTranscurridos>=0 && minutosTranscurridos<=10) return 'Hace un momento.'
@@ -573,3 +539,66 @@ function getNombreMes(numMes){
   //Recibe un numero de mes, si es '05' le quita el cero y devuelve el nombre de mes
 }
 
+
+
+
+
+function getArchivoComentarios(cantidadComentarios,unaBaseDatos){
+
+  //Esta funcion va a generar un array de objetos comentarios para usar aunque mas adelante la idea es usar un API
+
+  let arrayComentarios = []
+  let i=1;
+  let unaFechaHora;
+
+  for(i;i<cantidadComentarios+1;i++){
+
+    unaFechaHora = getFechaAleatoria()
+
+    let objetoComentario = {
+
+      comentarioID: i, //Identificador del comentario.
+      postID: generarValorAleatorio(1,unaBaseDatos.getCantidadPosts()), //Comentario al que pertenece el comentario.
+      userID: generarValorAleatorio(1,unaBaseDatos.getCantidadUsuarios()), //user que hizo el comentario
+      texto: 'Hola! Este es el comentario ID ' + i, //Texto del comentario.
+      fecha: unaFechaHora.fechaString,
+      hora: unaFechaHora.horaString
+    }
+
+  //Ahora a la lista de hashtag le meto entre 3 y 8 hashtags de motoicletas en forma aleatoria.
+  /*j=1;
+
+  
+
+  while (j<generarCantidadHashtag){
+    objetoComentario.hashtagList.push(hashtagsMotocicletas[generarValorAleatorio(0,hashtagsMotocicletas.length-1)])
+    j++;
+
+  }*/
+
+    arrayComentarios.push(objetoComentario)
+
+}
+
+return arrayComentarios
+
+}
+
+
+function getHashTagsList(cantidadMaxima){
+
+  //Devuelve una lista de hashtags generada a partir del array 'hashtagmotocicletas'.
+  //Los posts de los usuarios pueden tener 0,1 o muchos hashtag.
+
+  let j =0;
+  let hashtagList = []
+  
+  while (j<cantidadMaxima){
+    //Agrego a la lista una cantidad deseada de hashtags y los eligo de manera aleatoria del array hashtagmoticletas.
+    hashtagList.push(hashtagsMotocicletas[generarValorAleatorio(0,hashtagsMotocicletas.length-1)])
+    j++;
+  }
+
+  return hashtagList
+
+}

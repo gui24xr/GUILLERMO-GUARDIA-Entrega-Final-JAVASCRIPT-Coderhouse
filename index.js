@@ -12,17 +12,26 @@ const DateTime = luxon.DateTime
 
 }*/
 
-console.log(getLeyendaTiempoTranscurrido('05-07-2014','10:23'))
+//console.log(JSON.stringify(archivoPosts2))
 
 
 
 //-----------------------------------------------------------------------------------------------//
-// CATEGORIAS
+// CATEGORIAS Y ARRAYS CON CONSTANTES.
 //-----------------------------------------------------------------------------------------------//
 
 //En este array guardo categorias posibles para pasarle de forma aleatoria al parametro categoria.
 const categoriasImagenes = ["helmet", "helmets", "motorbikes", "moto", "shoei","airoh", 
 "dainese", "cbr","hjc", "alpinestars", "ktm", "ducati", "kawasaki", "motogp", "crf450",];
+
+
+
+const hashtagsMotocicletas = [
+  "#Motocicletas", "#Motos", "#Moteros", "#BikerLife", "#RutasEnMoto", "#CustomBikes", "#Motocross",
+  "#CaféRacer", "#MotocicletasClásicas", "#ViajesEnMoto", "#AdventureBikes", "#MotoGP", "#Ducati",
+  "#HarleyDavidson", "#Kawasaki","#Suzuki", "#Yamaha", "#Honda", "#Triumph", "#BMWmotos", "HJC", "Shoei",
+  "#Arai",  "#AGV",  "#Bell", "#Scorpion", "#Nolan", "#Schuberth", "#LS2", "#Shark", "#Suzuki", "#Yamaha", "#Honda",
+  "#Kawasaki", "#Ducati", "#Harley-Davidson", "Triumph", "#BMWMotorrad", "#KTM", "#Aprilia"];
 
 //-----------------------------------------------------------------------------------------------//
 // URLS UNPLASH
@@ -48,12 +57,16 @@ const urlPicsMotorcycle =
 // DECLARACION E INICIALIZICION VARIABLES GLOBALES DE INSTANCIAS
 //-----------------------------------------------------------------------------------------------//
 
+//archivoPosts2.forEach ( post => post.hashtagslist = getHashTagsList(generarValorAleatorio(1,10)) )
+//console.log(JSON.stringify(archivoPosts2))
+
+
 var nuevaAlturaMainContainer;
 
 //Base de datos
 var baseDatosApp = undefined; //= new baseDatos(archivoUsuarios,archivoPosts)
 conectarBaseDatos(); //Crea la BD, levanta los archivos.
-creacionDePerfilesAleatorios(); //Le agrega perfiles y posts 'falsos' para poblar la BD
+
 
 
 

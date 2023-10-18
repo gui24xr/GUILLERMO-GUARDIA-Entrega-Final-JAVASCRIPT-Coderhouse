@@ -192,22 +192,8 @@ const elementosBannerSolapas = [
     tag: "h1",
     id: "id-banner-solapas-boton",
     listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=> alert("Funcionalidad aun no implementada")}] ,
-    innerText: "NUEVO POST",
-  },
-  /*{
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
-    listaAcciones: [{evento:'click',accion: ()=>{desrenderizarScreenActual(), renderizarSolapaOtrosMoteros()}}],
-    innerText: "OTROS MOTEROS",
-  }*/,
-  {
-    tag: "h1",
-    id: "id-banner-solapas-boton",
-    listaClases: ["banner-solapas-text"],
     listaAcciones: [{evento:'click',accion: ()=> {desrenderizarScreenActual(),renderizarGaleria()}}],
-    innerText: "GALERIA",
+    innerText: "NUEVO POST",
   },
 
 ]

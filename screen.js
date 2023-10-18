@@ -106,12 +106,25 @@ function renderizarScreenRegistro(){
   }
 
 
+  function renderizarScreenUsuarioLogueado(){
 
+    //Inicia mostrando todos los posts de la red igual que instagram, ahora como no hay amigos muestra
+    configurarMainContainer('instagram')
+     let todosLosPosts = baseDatosApp.getAllPosts()
+      postRender1 = new PostsRender('id-selector-Posts-general2','un-container',transformarObjetoEnNodo,baseDatosApp,usuarioLogueado)
+     postRender1.engancharEnNodo(mainContainer)
+    
+    
+    
+    }
   
 
 function renderizarGaleria(){
 
     configurarMainContainer('galeria')
+
+    //Informo al usuario que debe elegir una imagen para el post.
+    mostrarMensaje('Elegi una imagen de la galeria para tu post !!','success','OK')
   
     //Muestra una galeria de fotos bajadas de unplash. Recorro el json de unplash.
     const url = "https://api.unsplash.com/search/photos?query=moto&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
@@ -151,29 +164,66 @@ function renderizarGaleria(){
 
 
 
+ function getTextoHashTags(texto){
+ //Crea una lista de hashtags a partir de una cadena separada
 
+      const hashtags = [];
+      let palabraActual = "";
+
+      for (let i = 0; i < texto.length; i++) {
+        if (texto[i] !== " ") {
+          palabraActual += texto[i];
+        } else {
+          if (palabraActual !== "") {
+            hashtags.push('#'+palabraActual);
+            palabraActual = "";
+          }
+        }
+      }
+
+      // Agregar la última palabra si no hay espacio al final del texto
+      if (palabraActual !== "") {
+        hashtags.push('#'+palabraActual);
+      }
+
+      return hashtags
+      }
+
+
+ 
 
   function crearNuevoPost(){
+
+    
 
     //El formulario esta engnchado al main container entonces podemos tomar el value ingresado.
     let textoNuevoPost = document.getElementById('nuevo-post-form-text-input').value
     let imagenNuevoPost = document.getElementById('nuevo-post-form-imagen-elegida').src
+    let hashtagsNuevoPost = document.getElementById('nuevo-post-form-hashtags-input').value
 
     //Busco el ID del usuario logueado y la fecha actual para crear el post
     let userIDNuevoPost = baseDatosApp.getUserInfo(usuarioLogueado).userID
     let fechaHoraNuevoPost = getFechaActual()
 
+    let listaHashtags = getTextoHashTags(hashtagsNuevoPost)
+    console.log(listaHashtags)
+
     //console.log(textoNuevoPost,'\n',imagenNuevoPost,'\n',userIDNuevoPost,'\n',fechaHoraNuevoPost)
-   baseDatosApp.agregarNuevoPost(userIDNuevoPost,fechaHoraNuevoPost.fechaString,fechaHoraNuevoPost.horaString,textoNuevoPost,imagenNuevoPost)
+   baseDatosApp.agregarNuevoPost(userIDNuevoPost,fechaHoraNuevoPost.fechaString,fechaHoraNuevoPost.horaString,textoNuevoPost,listaHashtags,imagenNuevoPost)
 
    //Se creo el nuevo Post, ahora tengo que ir a mostrarlo.
    mostrarMensaje(usuarioLogueado + ' creaste un nuevo posteo !!!','success','Aceptar')
+
+   //Ahora renderizo el screen del user Logueado, o sea el de ingreso.
+   renderizarScreenUsuarioLogueado()
 
   }
 
 
 
   function renderizarFormularioNuevoPost(e){
+
+    
 
     //Configuro main container.
     configurarMainContainer('nuevoPost')
@@ -185,34 +235,54 @@ function renderizarGaleria(){
     let elementosNuevoPostForm = [
       {
         tag: "h1",
-        id: "login-form-title",
-        listaClases: ["login-form-text"],
+        id: "nuevo-post-form-titulo",
+        listaClases: ["nuevo-post-form-titulo"],
         listaAcciones: undefined,
         innerText: "NUEVO POST",
       },
     
+     
+
       {
-        tag: "img",
-        id: "nuevo-post-form-imagen-elegida",
-        listaClases: ["headerbar-menu-iconos"],
+        tag: "div",  
+        id: "nuevo-post-form-imagen-container",
+        listaClases: ["container-un-post-píc"],
         listaAcciones: undefined,
-        source: e.src,
-      },
+        hijos:[ 
+
+          {
+            tag: "img",
+            id: "nuevo-post-form-imagen-elegida",
+            listaClases: ["container-un-post-container-imagen-pic"],
+            listaAcciones: undefined,
+            source: e.src,
+          },
+     
+    ]},
     
       {
         tag: "input",
         id: "nuevo-post-form-text-input",
-        listaClases: ["login-form-input"],
+        listaClases: ["nuevo-post-form-text-input"],
         listaAcciones: undefined,
         type: "text",
-        placeHolder: "Usuario",
+        placeHolder: "Escribir...",
+      },
+
+      {
+        tag: "input",
+        id: "nuevo-post-form-hashtags-input",
+        listaClases: ["nuevo-post-form-text-input"],
+        listaAcciones: undefined,
+        type: "text",
+        placeHolder: "Ingresa tus hashtags separados por espacios y sin #...",
       },
     
     
       {
         tag: "input",
-        id: "login-form-submit-input",
-        listaClases: ["login-form-button"],
+        id: "nuevo-post-form-submit-input",
+        listaClases: ["nuevo-post-form-submit-input"],
         listaAcciones: undefined,
         type: "submit",
         value: "Aceptar",
@@ -222,12 +292,9 @@ function renderizarGaleria(){
 
     //let textoIngresado = document.getElementById('nuevoPost-form-text-input').value
     //console.log(textoIngresado)
-    //Creo el form
+    //Creo el form y cuando el user le de aceptar va a ejecutar crearNuevoPostForm()
     
-    nuevoPostForm = new wrapperElements("id-register-form","login-form",elementosNuevoPostForm, transformarObjetoEnNodo, "javascript:crearNuevoPost()");
-    
-    
-    
+    nuevoPostForm = new wrapperElements("id-nuevo-post-form","nuevo-post-form",elementosNuevoPostForm, transformarObjetoEnNodo, "javascript:crearNuevoPost()");
     nuevoPostForm.engancharEnNodo(mainContainer)
 
    

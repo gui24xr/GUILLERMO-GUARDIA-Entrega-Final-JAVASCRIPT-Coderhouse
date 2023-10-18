@@ -45,9 +45,20 @@ class PostsRender  {
      //console.log("Likeadores: ", post.usersLikeadores)
      let leyendaLikes = post.usersLikeadores.length > 0 ? 'Le gusta a ' + post.usersLikeadores : "Aun no tienes likes !!!"
      let leyendaTiempoTranscurrido = getLeyendaTiempoTranscurrido(post.fecha,post.hora)
-     console.log('P: ',post.fecha , '    ',post.hora)
+     //console.log('P: ',post.fecha , '    ',post.hora)
 
+     /*En la info del post tambien nos viene la lista de hashtag, formo una cadena para mostrarlo*/
+     let hashtagsString = '';
+     post.hashtagslist.forEach ( x => hashtagsString = hashtagsString + ' '+ x)
+
+     /*Cantidad de comentarios. COn operador ternario*/
+     let leyendaCantidadComentarios  = post.comentariosPost.length== 0 
+                                      ? 'Aun no tienes comentarios' 
+                                      : post.comentariosPost.length == 1
+                                      ? '1 comentario...' 
+                                      : 'Ver los ' + post.comentariosPost.length + ' comentarios...'
      
+    
     elementosParaRenderizar= [                        
 
                                   
@@ -119,6 +130,14 @@ class PostsRender  {
                                       source: "./imagenes/icons/ico_like.png",
                                     },
                                     {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-un-post-legusta"],
+                                      listaAcciones: undefined,
+                                      innerText: leyendaLikes
+                                    },
+
+                                    {
                                       tag: "img",
                                       id: "id-postviewer-div-botoncerrar",
                                       listaClases: ["container-un-post-iconos-comentarios"],
@@ -133,14 +152,7 @@ class PostsRender  {
                                       source: "./imagenes/icons/ico_guardar.png",
                                     },
 
-                                    {
-                                      tag: "p",
-                                      id: "id-postviewer-div-head-username",
-                                      listaClases: ["container-un-post-legusta"],
-                                      listaAcciones: undefined,
-                                      innerText: leyendaLikes
-                                    },
-
+                                  
                                     {
                                       tag: "h1",
                                       id: "id-postviewer-div-head-username",
@@ -156,32 +168,35 @@ class PostsRender  {
                                       listaAcciones: undefined,
                                       innerText: post.texto
                                     },
+
                                     {
                                       tag: "p",
-                                      id: "id-postviewer-div-head-hora",
-                                      listaClases: ["container-un-post-texto"],
-                                      listaAcciones: [{evento:'click',accion:()=>'Funcionalidad aun no implementada !'}],
-                                      innerText: 'Agregar un comentario...'
+                                      id: "id-postviewer-div-interacciones-hashtags",
+                                      listaClases: ["container-un-post-hashtags"],
+                                      listaAcciones: undefined,
+                                      innerText: hashtagsString
                                     },
                                     {
                                       tag: "p",
                                       id: "id-postviewer-div-head-hora",
-                                      listaClases: ["container-un-post-texto"],
+                                      listaClases: ["container-un-post-agregar-comentario"],
+                                      listaAcciones: [{evento:'click',accion:()=>this.getComentarios(post.postID)}],
+                                      innerText: leyendaCantidadComentarios
+                                    },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-hora",
+                                      listaClases: ["container-un-post-tiempo-transcurrido"],
                                       listaAcciones: [],
                                       innerText: leyendaTiempoTranscurrido //post.fecha +' '+ post.hora
                                     },
                                     ]
                                   },
 
-                              
-                              
-                              
-                              
-                              
-                              
-                              
-                              ]
-                           
+                      ]
+
+
+                         
 
 
 
@@ -212,6 +227,171 @@ this.getCajaPostsEnteros()
 this.container.className = 'un-container' //CLASE CUANDO MUESTRA POSTS
 
  }
+
+
+
+getComentarios(postID){
+//Muestra los comentarios del postID y pone un formulario de nuevos comentarios y una vez hecho va al post.
+
+//Pido a la Base de datos la info del post donde ya se que tengo un objeto con los comentarios x lo cual tengo una lista de obj.
+let comentariosPost = this.baseDatos.getPostID(postID).comentariosPost
+let arrayObjetosRenderizar = []
+//console.log('len: ', comentariosPost.length)
+let userComentario
+let leyendaTiempo;
+let textoComentario;
+
+
+//Agrego el div titulo.
+arrayObjetosRenderizar.push( 
+        
+  {tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+  id: "id-container-comentarios",
+  listaClases: ["container-comentarios-division-titulo"],
+  listaAcciones: undefined,
+  hijos:[ 
+    {
+      tag: "p",
+      id: "id-postviewer-div-head-username",
+      listaClases: ["container-comentarios-titulo"],
+      listaAcciones: undefined,
+      innerText: 'COMENTARIOS'
+    },]})
+
+//Agrego el form arriba 
+arrayObjetosRenderizar.push( 
+        
+  {tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+  id: "id-container-comentarios",
+  listaClases: ["container-comentario-division-form"],
+  listaAcciones: undefined,
+  hijos:[ 
+    {
+      tag: "input",
+      id: "id-container-comentarios-ingreso",
+      listaClases: ["container-comentarios-ingreso"],
+      listaAcciones: undefined,
+      type: "text",
+      placeHolder: "Ingresa tu comentario....",
+    },
+    {
+      tag: "input",
+      id: "container-comentarios-submit",
+      listaClases: ["login-form-button"],
+      listaAcciones: undefined,
+      type: "submit",
+      value: "Aceptar",
+    },
+  
+  
+  ]})
+
+
+//SI tiene comentarios armo lo que voy a mandar a renderizar, si no renderizo algo que diga vacio.
+if (comentariosPost.length > 0){
+
+comentariosPost.forEach(c => {
+/*
+  console.log('texto: ',c)
+  console.log('comentador',this.baseDatos.getInfoUserID(c.userID).userName)
+  console.log('texto: ',c.texto)
+  console.log('Hacw: ',getLeyendaTiempoTranscurrido(c.fecha,c.hora))
+*/
+  userComentario =this.baseDatos.getInfoUserID(c.userID).userName
+  textoComentario = c.texto
+  leyendaTiempo = getLeyendaTiempoTranscurrido(c.fecha,c.hora)
+  
+
+      arrayObjetosRenderizar.push( 
+        
+                                  {tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+                                  id: "id-container-comentarios",
+                                  listaClases: ["container-comentario-division-padre"],
+                                  listaAcciones: undefined,
+                                  hijos:[ 
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-usuario"],
+                                      listaAcciones: undefined,
+                                      innerText: userComentario
+                                    },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-tiempo"],
+                                      listaAcciones: undefined,
+                                      innerText: leyendaTiempo
+                                    },
+                                    {
+                                      tag: "img",
+                                      id: "corazon"+"comentario-id"+c.comentarioID,
+                                      listaClases: ["container-comentarios-icono-like"],
+                                      listaAcciones: [{evento:'click',accion:( )=> alert('Funcion aun no implementada')}],
+                                      source: "./imagenes/icons/ico_like_b.png",
+                                    },
+
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-texto"],
+                                      listaAcciones: undefined,
+                                      innerText: textoComentario
+                                    },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-responder"],
+                                      listaAcciones: [{evento:'click',accion:( )=> alert('Funcion aun no implementada')}],
+                                      innerText: 'Responder'
+                                    },
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-vertraduccion"],
+                                      listaAcciones: [{evento:'click',accion:( )=> alert('Funcion aun no implementada')}],
+                                      innerText: 'Ver traduccion'
+                                    },
+
+
+
+                                    
+
+                                    ]
+                                  }
+                                 )
+
+
+
+})
+}
+
+else{
+
+  alert("sin coment<rios")
+
+  arrayObjetosRenderizar.push({tag: "div",  //Solo los div con hijos tendran el atributo tipo?? e hijos.
+                                  id: "id-postviewer-div-interaccion",
+                                  listaClases: ["container-comentarios-division-padre"],
+                                  listaAcciones: undefined,
+                                  hijos:[ 
+                                    {
+                                      tag: "p",
+                                      id: "id-postviewer-div-head-username",
+                                      listaClases: ["container-comentarios-texto"],
+                                      listaAcciones: undefined,
+                                      innerText: 'Aun no tiene comentarios.'
+                                    }]})
+}
+
+
+//Ya tenemos el array. Generamos el wrapper 
+let wrapperComentariosPost =  new wrapperElements('id-wrapper-comentarios-post' + postID,'container-comentarios',arrayObjetosRenderizar,transformarObjetoEnNodo,"javascript:()=>alert('dd')")
+this.limpiarContainer()
+wrapperComentariosPost.engancharEnNodo(this.container)   
+}
+
+
 
 
 
@@ -287,7 +467,7 @@ let elementosParaRenderizar;
 
 
 
-        unWrapper = new wrapperElements('idPostGrilla'+post.postID,'clase-wrappers-grilla-posts',elementosParaRenderizar,transformarObjetoEnNodo)          
+        unWrapper = new wrapperElements('idPostGrilla'+post.postID,'clase-wrappers-grilla-comentarios',elementosParaRenderizar,transformarObjetoEnNodo)          
         listaWrappers.push(unWrapper)
                             
       
@@ -398,7 +578,12 @@ b
   
 
 
+guardarPostEnColeccion(postID){
 
+  //Guarda el post ID en la coleccion del user
+
+
+}
 
 
   
