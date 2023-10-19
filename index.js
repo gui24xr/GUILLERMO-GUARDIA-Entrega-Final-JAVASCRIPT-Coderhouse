@@ -1,56 +1,5 @@
 
 
-const PICPOSTBIENVENIDA = '../imagenes/postbienvenida.jpg'
-const DateTime = luxon.DateTime
-
-//ESTE OBJETO VA A REPRESENTAR MI HORA ACTUAL PARA HACER CALCULOS Y PONER EN POSTS
-/*const objetoTiempo = {diaActual:DateTime.now().day,
-                      mesActual:DateTime.now().month,
-                      anioActual:DateTime.now().year,
-                      horaActual:DateTime.now().hour,
-                      minutesActual:DateTime.now().minute,
-
-}*/
-
-//console.log(JSON.stringify(archivoPosts2))
-
-
-
-//-----------------------------------------------------------------------------------------------//
-// CATEGORIAS Y ARRAYS CON CONSTANTES.
-//-----------------------------------------------------------------------------------------------//
-
-//En este array guardo categorias posibles para pasarle de forma aleatoria al parametro categoria.
-const categoriasImagenes = ["helmet", "helmets", "motorbikes", "moto", "shoei","airoh", 
-"dainese", "cbr","hjc", "alpinestars", "ktm", "ducati", "kawasaki", "motogp", "crf450",];
-
-
-
-const hashtagsMotocicletas = [
-  "#Motocicletas", "#Motos", "#Moteros", "#BikerLife", "#RutasEnMoto", "#CustomBikes", "#Motocross",
-  "#CaféRacer", "#MotocicletasClásicas", "#ViajesEnMoto", "#AdventureBikes", "#MotoGP", "#Ducati",
-  "#HarleyDavidson", "#Kawasaki","#Suzuki", "#Yamaha", "#Honda", "#Triumph", "#BMWmotos", "HJC", "Shoei",
-  "#Arai",  "#AGV",  "#Bell", "#Scorpion", "#Nolan", "#Schuberth", "#LS2", "#Shark", "#Suzuki", "#Yamaha", "#Honda",
-  "#Kawasaki", "#Ducati", "#Harley-Davidson", "Triumph", "#BMWMotorrad", "#KTM", "#Aprilia"];
-
-//-----------------------------------------------------------------------------------------------//
-// URLS UNPLASH
-//-----------------------------------------------------------------------------------------------//
-
-//Esta funcion la uso para obtener una URL de unplash con una cateoria deseada o irla cambiando segun lo que le pida
-const unplashURLCategoria = (categoria, cantidad) =>
-  "https://api.unsplash.com/search/photos?query=" +
-  categoria +
-  "&per_page=" +
-  cantidad +
-  "&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
-
-const urlPicsCBR =
-  "https://api.unsplash.com/search/photos?query=motorbikes&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
-const urlPicsHelmet =
-  "https://api.unsplash.com/search/photos?query=helmet&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
-const urlPicsMotorcycle =
-  "https://api.unsplash.com/search/photos?query=motorcycle&per_page=50&client_id=gK52De2Tm_dL5o1IXKa9FROBAJ-LIYqR41xBdlg3X2k";
 
 
 //-----------------------------------------------------------------------------------------------//
